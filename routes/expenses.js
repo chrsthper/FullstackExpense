@@ -3,8 +3,8 @@ const router = express.Router();
 const expenseController = require('../controllers/expense');
 
 
-router.get('/', expenseController.getExpensesPage);
-router.post('/register',expenseController.postExpeses);
+router.get('/expense-page', expenseController.getExpensesPage);
+router.post('/register-expense',expenseController.postExpeses);
 
 
 

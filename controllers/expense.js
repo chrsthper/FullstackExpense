@@ -1,12 +1,12 @@
 const express = require('express');
 const expenses = require('../models/expenses');
 const { JSON } = require('sequelize');
-
+const path = require( 'path')
 exports.getExpensesPage = ( req,res,next) =>{
 
-    res.status(200).sendFile(path.join(__dirname,'public','views','index.html'));
+    res.status(200).sendFile(path.join(__dirname,'..','public','views','expense.html'));
 
-}
+};
 
 exports.postExpeses = (req,res,next) => {
       const userExpense = {
@@ -17,7 +17,8 @@ exports.postExpeses = (req,res,next) => {
          time:req.body.time
 
       }
-
+      
+       
       expenses.create(
         {
             amount: userExpense.amount,
