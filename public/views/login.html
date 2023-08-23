@@ -40,13 +40,16 @@
          }
 
     </style>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+      
+      <script src="login.js"></script>
 </head>
 <body>
 
     <div class="container-fluid d-flex justify-content-center">
         <div class="container d-flex justify-content-center form-container">
                <h3 style="text-align: center;">Login</h3>
-             <form action="/login/validiation" method="post" class="formInput">
+             <form action="/login/validiation" method="post" class="formInput" onsubmit="authorization() " >
                  <label for="email">Enter Email :</label>
                  <input type="email" name="email" id="email" class="form-control form-control-sm" required>
                  <label for="password">Enter Password :</label>

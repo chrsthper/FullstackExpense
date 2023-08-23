@@ -1,11 +1,43 @@
+async function addnewexpense (){
 
+   const  amount  = document.getElementById('amount').value;
+   const  description = document.getElementById('discribe').value;
+   const category = document.getElementById('category').value;
+   const date = document.getElementById('date').value;
+   const  time = document.getElementById('time').value;
+
+   const expense ={
+       amount: amount,
+       description:description,
+       category:category,
+       date:date,
+       time:time
+   }
+
+   
+   const token = localStorage.getItem('token');
+  
+  
+   await axios.post('http://localhost:4000/register-expense',expense,{ headers: {"Authorization" : token }})
+     .then( resonse => {
+        console.log(resonse.data);
+        
+         
+
+     })
+     .catch(errr => {
+      console.log(errr);
+     })
+};
 
    window.addEventListener('DOMContentLoaded', () => {
       fetchData();
    });
 
    async function fetchData(){
-          await axios.get('http://localhost:4000/expenses')
+
+            const token = localStorage.getItem('token');
+          await axios.get('http://localhost:4000/expenses', { headers : {"Authorization" : token}})
           .then(results => {
             console.log(results);
             const expenses = results.data.allExpense;
