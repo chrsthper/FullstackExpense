@@ -8,6 +8,7 @@
       .then( resonse => {
        
          localStorage.setItem('token' , resonse.data.token);
+
           window.location.href = '/expense-page';
 
 

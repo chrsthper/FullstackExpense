@@ -9,11 +9,16 @@ const expenseRoutes = require('./routes/expenses');
 const loginRoutes = require('./routes/login');
 const signUpRoutes = require('./routes/signUp');
 const User = require('./models/signUpUser');
+const orders = require('./models/orders');
+const premiumRouter = require('./routes/buyprimium');
 
 const port = 4000;
 const app = express();
 
+
+
 app.use(express.json());
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.static(path.join(__dirname,'public','css')));
 app.use(express.static(path.join(__dirname,'public','js')));
@@ -22,11 +27,14 @@ app.use(express.static(path.join(__dirname,'public','views')));
 app.use(loginRoutes);
 app.use(signUpRoutes);
 app.use(expenseRoutes);
+app.use(premiumRouter);
 
 
 // Associations 
 User.hasMany(expenses);
 expenses.belongsTo(User);
+User.hasMany(orders);
+orders.belongsTo(User);
 
 
 

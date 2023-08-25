@@ -1,3 +1,101 @@
+window.addEventListener('DOMContentLoaded', () => {
+  findPremium();
+  fetchData();
+});
+
+
+ 
+function premiumData (response){
+  const premimuContainer = document.getElementById('premium-container');
+  premimuContainer.removeChild(premimuContainer.firstElementChild);
+
+   const premiumtext = document.createTextNode('You are Premium User.');
+   const userName = document.createTextNode(response.data.name);
+
+   const br = document.createElement('br');
+   const space = document.createTextNode(' ');
+
+   
+
+   const lbutton = document.createElement('button');
+   const leaderBoardText = document.createTextNode('leaderBoard');
+   lbutton.classList = 'btn btn-dark leaderBoard-btn';
+   
+   premimuContainer.appendChild(userName);
+   premimuContainer.appendChild(br)
+   premimuContainer.appendChild(premiumtext);
+   premimuContainer.appendChild(space)
+   premimuContainer.appendChild(lbutton);
+   lbutton.appendChild(leaderBoardText);
+
+   
+    lbutton.addEventListener('click', async function () {
+    const token = localStorage.getItem('token');
+    console.log(token);
+    await axios.get('http://localhost:4000/premium-user-leaderboard',{headers : {"Authorization" : token}})
+    .then((result) => {
+        
+      const heading = document.getElementById('lboardh');
+      heading.appendChild(document.createTextNode('LeaderBoard'));
+
+    
+        for(let i=0 ; i< result.data.expensesl.length; i++){
+          leaderBoardData(result.data.expensesl[i]);
+          
+        }
+          
+
+    })
+    .catch( (err)=> {
+      console.log(err);
+    })
+
+   });
+
+    function leaderBoardData(data){
+      console.log(data)
+      const {name ,amount} = data;
+      const ul= document.getElementById('leaderboard');
+      const li = document.createElement('li');
+      
+      li.appendChild(document.createTextNode(name));
+      li.appendChild(document.createTextNode(' '));
+      li.appendChild(document.createTextNode('Total Expense : '));
+      li.appendChild(document.createTextNode(amount));
+      
+      ul.appendChild(li);
+
+         
+
+    }
+
+}
+  
+async function findPremium(){
+      
+       const token = localStorage.getItem('token');
+
+       await axios.get('http://localhost:4000/is-premium-user', {headers : {"Authorization" : token}})
+       .then(( response) => {
+
+
+              
+              if(response.data.isPremiumUser === true){
+                  premiumData(response); 
+                 
+              }
+
+
+       })
+       .catch((err)=> {
+         console.log(err);
+       })
+
+
+}
+
+
+
 async function addnewexpense (){
 
    const  amount  = document.getElementById('amount').value;
@@ -30,9 +128,7 @@ async function addnewexpense (){
      })
 };
 
-   window.addEventListener('DOMContentLoaded', () => {
-      fetchData();
-   });
+  
 
    async function fetchData(){
 
@@ -153,3 +249,53 @@ function AddExpence(expense){
     },300);
  }
 
+/// reazor pau handler  
+
+ async function buyPremiume(e){
+     
+   const token = localStorage.getItem('token');
+
+   const response = await axios.get('http://localhost:4000/buy-premium', { headers: {"Authorization" : token }})
+   
+    var options ={
+         "key": response.data.key_id,
+         "order_id": response.data.order.id,
+         "handler": async function (resonse){
+             await axios.post('http://localhost:4000/premium-success',{
+                 order_id : options.order_id,
+                 payment_id: resonse.razorpay_payment_id,
+             },
+             {
+               headers:{"Authorization": token}
+             }
+             
+             )
+
+             setTimeout(() => {
+                window.location.reload();
+             },300);
+
+   
+            
+
+         }
+    };
+
+    const rzp1 = new Razorpay(options);
+    rzp1.open();
+   e.preventDefault();
+   rzp1.on('payment.failed', function (response) {
+
+       console.log(response);
+       alert('Something went wrong');
+
+   })
+   
+   
+ 
+
+     
+
+
+
+ };

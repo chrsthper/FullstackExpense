@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(236, 236, 236);
+    background-color: rgb(89, 161, 163);
 }
 
 h3{
@@ -13,7 +13,11 @@ h3{
  .main{
     background-color: darkcyan; 
     max-width: 760px;
-    max-height: 500px;
+    max-height: 550px;
     padding-bottom: 25px;
 }
-
+label{
+    font-family: 'Times New Roman', Times, serif;
+    font-weight:500;
+    font-size: 18px;
+}
