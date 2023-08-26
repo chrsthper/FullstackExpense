@@ -1,10 +1,11 @@
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const path = require('path');
 const sequelize = require('./util/database');
 const { error } = require('console');
 const { JSON, Association } = require('sequelize');
 const expenses = require('./models/expenses');
+
 const expenseRoutes = require('./routes/expenses');
 const loginRoutes = require('./routes/login');
 const signUpRoutes = require('./routes/signUp');
@@ -33,8 +34,10 @@ app.use(premiumRouter);
 // Associations 
 User.hasMany(expenses);
 expenses.belongsTo(User);
+
 User.hasMany(orders);
 orders.belongsTo(User);
+
 
 
 

@@ -4,6 +4,7 @@ const User = require('../models/signUpUser');
 const Expenses = require('../models/expenses');
 const sequelize = require('../util/database');
 const e = require('express');
+const { Sequelize } = require('sequelize');
 //const order = require('../models/orders');
 
 exports.getIsPremiumUser = async (req,res) =>{
@@ -100,16 +101,8 @@ exports.getLeaderboard = async (req,res)=>{
 
     try {
            const expensesl = await User.findAll({
-              attributes : [ 'id','name',[sequelize.fn('sum', sequelize.col('expenses.amount')),'amount']],
-              include:[
-                {
-                  model: Expenses,
-                  attributes:[]
-        
-               }
-            ],
-              group:['users.id'],
-              order:[['amount','DESC']]
+              attributes : [ 'id','name','totalExpense'],
+            
            })
 
            res.status(200).json({expensesl});

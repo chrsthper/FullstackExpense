@@ -31,16 +31,19 @@ function premiumData (response){
    
     lbutton.addEventListener('click', async function () {
     const token = localStorage.getItem('token');
-    console.log(token);
+    
     await axios.get('http://localhost:4000/premium-user-leaderboard',{headers : {"Authorization" : token}})
     .then((result) => {
         
       const heading = document.getElementById('lboardh');
       heading.appendChild(document.createTextNode('LeaderBoard'));
 
+        let data = result.data.expensesl;
+        
+        
     
-        for(let i=0 ; i< result.data.expensesl.length; i++){
-          leaderBoardData(result.data.expensesl[i]);
+        for(let i=0 ; i< data.length; i++){
+          leaderBoardData(data[i]);
           
         }
           
@@ -54,14 +57,14 @@ function premiumData (response){
 
     function leaderBoardData(data){
       console.log(data)
-      const {name ,amount} = data;
+      const {name , totalExpense} = data;
       const ul= document.getElementById('leaderboard');
       const li = document.createElement('li');
       
       li.appendChild(document.createTextNode(name));
       li.appendChild(document.createTextNode(' '));
       li.appendChild(document.createTextNode('Total Expense : '));
-      li.appendChild(document.createTextNode(amount));
+      li.appendChild(document.createTextNode(totalExpense));
       
       ul.appendChild(li);
 
@@ -151,7 +154,7 @@ async function addnewexpense (){
 function AddExpence(expense){
     
       const { amount , description, category, date, time  } = expense;
-          
+       const token = localStorage.getItem('token');   
 
       //  Creating li element ul ***************
 
@@ -191,26 +194,44 @@ function AddExpence(expense){
        liElement.appendChild(li);
      
         deletebtn.addEventListener('click', removeLi);
+        deletebtn.addEventListener('click', decreas);
+        
+         async function decreas(){
+          await axios.post(`http://localhost:4000/decreas-exspense`,{amount},{headers:{"Authorization" : token}})
+            .then(()=> {
+                    console.log("Decreases..")
+            }).catch((err) => {
+              console.log(err)
+            })
+         };
 
         async function removeLi(){
              let id = expense.id;
              console.log(id);
-           await axios.delete(`http://localhost:4000/expenses/${id}`)
-           .then( result => {
-            console.log('deleted..');
 
-           })
-           .catch( err => {
-            console.log(err)
-           });
-             
-             liElement.removeChild(li);
+            
+            
+            await axios.delete(`http://localhost:4000/expenses/${id}`)
+              .then( result => {
+               console.log('deleted..');
+               liElement.removeChild(li);
+              })
+              .catch( err => {
+               console.log(err)
+              });
+                
+               
+            }
+            
+
+          
             
 
 
-         }
+         
 
          edit.addEventListener('click',editLi);
+         edit.addEventListener('click',decreas);
       async   function editLi(){
                 
               let id= expense.id;

@@ -8,12 +8,12 @@ exports.authentication = (req,res,next) => {
                     
                const user = jwt.verify(token ,'123456abcdef')
                      
-                   console.log('>>>>',user.userId)
+                   console.log('>>>> User Verified :',user.userId)
                    User.findByPk(user.userId)
                    .then((user)=> {
 
                          req.user = user;
-                         console.log(req.user.id);
+                        
 
                          next();
                    })
