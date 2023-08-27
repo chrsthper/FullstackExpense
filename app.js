@@ -11,6 +11,7 @@ const loginRoutes = require('./routes/login');
 const signUpRoutes = require('./routes/signUp');
 const User = require('./models/signUpUser');
 const orders = require('./models/orders');
+const ForgetPassReq = require('./models/forgetPassReq');
 const premiumRouter = require('./routes/buyprimium');
 
 const port = 4000;
@@ -37,6 +38,8 @@ expenses.belongsTo(User);
 
 User.hasMany(orders);
 orders.belongsTo(User);
+User.hasMany(ForgetPassReq);
+ForgetPassReq.belongsTo(User);
 
 
 
@@ -50,7 +53,7 @@ sequelize.sync()
 })
 .catch( error => {
     console.log(error);
-})
+});
 
 
 

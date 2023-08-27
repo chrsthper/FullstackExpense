@@ -42,35 +42,27 @@
 
     </style>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
- 
 
+
+    
 </head>
 <body>
 
     <div class="container-fluid d-flex justify-content-center">
         <div class="container d-flex justify-content-center form-container">
                <h3 style="text-align: center;">Expense Tracker</h3>
-             <form action="/forget-password-called" method="post"  class="formInput" >
-                 <label for="email">Enter Email :</label>
-                 <input type="email" name="email" id="email" class="form-control form-control-sm" required>
+             <form action='/forget-password-called-req/${requestId}' method="post" class="formInput" >
+                 
+                 <label for="password">Enter Password :</label>
+                 <input type="password" name="newpassword" id="password" class="form-control form-control-sm" required>
                  
                  <br>
-                 <input type="submit" value="Get Reset Link" onclick="text()" class="btn btn-primary" >
+                 <input type="submit" value="Reset Password" class="btn btn-primary" >
                  <br>
-             </form> 
-             <p id="text"></p>     
+             </form>      
 
         </div>
     </div>
-    <script>
-        
-        function text(){
-          let p = document.getElementById('text');
-      let text = document.createTextNode('We sent a email.');
-         p.appendChild(text);
-
-        }
-
-  </script>
+    
 </body>
 </html>

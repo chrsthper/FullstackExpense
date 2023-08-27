@@ -63,12 +63,24 @@
                 <button class="btn btn-dark"><a href="/sign-up">Sign Up</a></button>
                 <br>
                 <br>
-                <button class="btn btn-dark"><a href="/forget-password">Forget Password</a></button>
+                <button class="btn btn-dark" onclick="forgetpassword()">Forget Password</a></button>
             </p>
               
 
         </div>
     </div>
-    
+     <script>
+            async function forgetpassword(){
+                  // const token = localStorage.getItem('token');
+                   await axios.get('/forget-password')
+                   .then((result) => {
+
+                     document.body.innerHTML =result.data;
+                       console.log(result.data)
+                   }).catch((err) => {
+                       throw new Error(err);
+                   });
+            }
+     </script>
 </body>
 </html>
