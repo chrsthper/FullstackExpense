@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(89, 161, 163);
+    background-color: rgb(104, 173, 175);
 }
 
 h3{
@@ -20,4 +20,16 @@ label{
     font-family: 'Times New Roman', Times, serif;
     font-weight:500;
     font-size: 18px;
+}
+
+.head{
+    display: flex;
+    justify-content: space-between;
+   
+}
+.b{
+    display: flex;
+}
+.exp-div{
+    max-height: 400px;
 }

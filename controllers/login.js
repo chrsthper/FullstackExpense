@@ -9,7 +9,7 @@ const sequelize = require('../util/database');
 const SibApiV3Sdk = require('sib-api-v3-sdk');
 const uuid = require('uuid');
 const { UUIDV4 } = require('sequelize');
-require('dotenv').config()
+require('dotenv').config();
 exports.getLoginPage = (req,res,next) => {
     res.sendFile(path.join(__dirname,'../','public','views','login.html'));
 };
@@ -43,7 +43,8 @@ exports.postForgetPassword = async (req,res) =>{
                           
 let defaultClient = SibApiV3Sdk.ApiClient.instance;
 let apiKey = defaultClient.authentications['api-key'];
-apiKey.apiKey = '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';
+apiKey.apiKey = process.env.API_KEY;
+
 
 let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 

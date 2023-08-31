@@ -5,7 +5,11 @@ const Expenses = require('../models/expenses');
 const sequelize = require('../util/database');
 const e = require('express');
 const { Sequelize } = require('sequelize');
-//const order = require('../models/orders');
+const AWS = require('aws-sdk');
+const incomes = require('../models/incomes');
+require('dotenv').config();
+
+
 
 exports.getIsPremiumUser = async (req,res) =>{
 
@@ -32,8 +36,8 @@ exports.getIsPremiumUser = async (req,res) =>{
 exports.getbuyPremium = async (req,res) => {
     try {
           var rzp = new Razorpay({
-            key_id : 'rzp_test_WOdOb54oqu0yCI',
-            key_secret:'9HeJFU1aHoruua1oEWY1M7uq'
+            key_id : process.env.RAZORPAY_KEY_ID,
+            key_secret: process.env.RAZORPAY_KEY_SECRET
           })
 
           const amount = 1000;
@@ -103,15 +107,118 @@ exports.getLeaderboard = async (req,res)=>{
            const expensesl = await User.findAll({
               attributes : [ 'id','name','totalExpense'],
             
-           })
+           });
 
            res.status(200).json({expensesl});
     } catch (error) {
         throw new Error(error);
     }
 
-
-
     
     
-}
+};
+
+
+
+function uploadToS3(data , fileName){
+    const BUCKET_NAME = process.env. BUCKET_NAME;
+    const IAM_USER_KEY = process.env.IAM_USER_KEY;
+    const IAM_USER_SECRET = process.env.IAM_USER_SECRET;
+
+
+    let s3Bucket = new AWS.S3({
+
+       accessKeyId :IAM_USER_KEY,
+       secretAccessKey : IAM_USER_SECRET,
+      // bucket:BUCKET_NAME
+    });
+
+    
+         const params = {
+             Bucket : BUCKET_NAME,
+             Key:  fileName,
+             Body: data,
+             ACL : 'public-read'
+         }
+  
+          return new Promise( (res ,rej ) =>{
+                  
+            s3Bucket.upload(params,  (err, s3response) =>{
+                if(err){
+
+                    console.log("Somthing WentWrong..",err)
+                    rej(err);
+
+                }
+                else{
+                  console.log(s3response.Location);  
+                     res(s3response.Location)
+                }
+          })
+ 
+          })
+       
+    
+
+
+};
+
+exports.getDowndload = async (req,res) =>{
+     
+   
+
+       /////
+       
+       const userId = req.user.id;
+      await Expenses.findAll({where:{ userId: userId}})
+      .then(async (expenses)=>{
+
+
+         const stringifiedExpenses = JSON.stringify(expenses);
+         const fileName =`Expenses${userId}/${new Date()}.txt`;
+        
+          let Url = await uploadToS3(stringifiedExpenses, fileName);
+   
+
+         res.status(200).json({ success:true , url: Url});
+
+      })
+      .catch((err) =>{
+        console.log(err)
+      })
+
+
+  
+            
+
+};
+
+exports.getDowndloadIncomes = async (req,res) =>{
+     
+   
+
+    /////
+    
+    const userId = req.user.id;
+   await incomes.findAll({where:{ userId: userId}})
+   .then(async (incomes)=>{
+
+
+      const stringifiedExpenses = JSON.stringify(incomes);
+      const fileName =`Incomes${userId}/${new Date()}.txt`;
+     
+       let Url = await uploadToS3(stringifiedExpenses, fileName);
+
+
+      res.status(200).json({ success:true , url: Url});
+
+   })
+   .catch((err) =>{
+     console.log(err)
+   })
+
+
+
+         
+
+};
