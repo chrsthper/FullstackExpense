@@ -20,24 +20,26 @@
         <div class="container main">
             <div class="container"><center><h3>Expence Tracker</h3></center></div>
             <form action="/register-expense" method="post" onsubmit="addnewexpense(),freeHolds()">
-                <label for="select"> Select: Income Or Expence</label>
+                <label for="select"> Select: Income Or Expenses</label>
                 <select name="money" id="select" class="form-control">
                     <option value="1">Income</option>
-                    <option value="0">Expence</option>
+                    <option value="0">Expenses</option>
                 </select>
                  <label for="amount"> Amount :</label>
                  <input type="number" name="amount" class="form-control" id="amount" required>
 
-                 <label for="discribe"> Discription :</label>
+                 <label for="discribe"> Description :</label>
                  <input type="text" name="description" class="form-control" id="discribe" required>
 
                  <label for="category">Category :</label>
                    <select name="category" class="form-control" id="category" >
-                    <option value="Grocery">Grocery</option>
-                    <option value="Electronic">Electronic</option>
+                    <option value="Grocery">Groceries</option>
+                    <option value="Electronic">Electronics</option>
                     <option value="Movie">Movie</option>
+                    <option value="Movie">Foods</option>
                     <option value="Fee">Fee</option>
                     <option value="Party">Party</option>
+                    <option value="Party">Coffee</option>
                    </select>
                    <label for="date">Date :</label>
                    <input type="date" name="date" class="form-control" id="date">
@@ -52,7 +54,7 @@
         </div>
         <br>
         <div class="container " id="premium-container">
-            <button id="buybutton" class="btn btn-dark" onclick="buyPremiume()">Buy Premiume</button>
+            <button id="buybutton" class="btn btn-dark" onclick="buyPremiume()">Buy Premium</button>
         </div>
         
         <br>
