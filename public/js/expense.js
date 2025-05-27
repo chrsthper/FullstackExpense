@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
       categorySelect.appendChild(opt);
     });
   }
-
   typeSelect.addEventListener("change", () => {
     updateCategoryOptions(typeSelect.value);
   });
