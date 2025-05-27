@@ -1,43 +1,40 @@
-const express = require('express');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const User = require('../models/signUpUser');
 
-exports.getSignUpPage = ( req,res,next) => {
-    res.status(200).sendFile(path.join(__dirname,'..','public','views','signUp.html'));
-
+exports.getSignUpPage = (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/views/signUp.html'));
 };
-exports.postSignUpUser = (req,res,next) => {
-      
-       const newUser = {
-           name : req.body.name,
-           email : req.body.email,
-           password : req.body.password
-       }
-  // using user model
+
+exports.postSignUpUser = async (req, res) => {
+  const { name, email, password } = req.body;
+
   try {
-    bcrypt.hash( newUser.password , 10 , async (err , hash) => {
-      User.create({
-        name : newUser.name,
-        email: newUser.email,
-        password: hash
-     })
-     .then( () => {
-  
-      res.send('You Sign Successfully.. Go back login');
-       console.log( ' New User Sign Up now..');
-    })
-    .catch( err => {
-      res.status(200).send("Email Already exist, use different email");
-     console.log('New user Sign Up Error',err);
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email already registered',
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await User.create({
+      name,
+      email,
+      password: hashedPassword,
     });
-    })
-    
-  } catch (error) {
-    console.log(error);
+
+    return res.status(201).json({
+      success: true,
+      message: 'Registration successful',
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+    });
   }
-     
-      
-
-
 };
