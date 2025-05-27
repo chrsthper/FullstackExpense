@@ -10,8 +10,8 @@ router.post('/register-expense',uerAuthentication.authentication,expenseControll
 router.get('/expenses', uerAuthentication.authentication ,expenseController.getExpenses);
 router.get('/incomes', uerAuthentication.authentication ,expenseController.getIncomes);
 
-router.delete('/expenses/:id',expenseController.deleteExpense);
-router.delete('/incomes/:id',expenseController.deleteIncome);
+router.delete('/expenses/:id', uerAuthentication.authentication, expenseController.deleteExpense);
+router.delete('/incomes/:id', uerAuthentication.authentication, expenseController.deleteIncome);
 router.post('/decreas-exspense',uerAuthentication.authentication, expenseController.getDescreasExpense);
 router.get('/balance',uerAuthentication.authentication,expenseController.getBalance);
 
