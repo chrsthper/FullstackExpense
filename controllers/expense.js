@@ -1,17 +1,15 @@
-const express = require('express');
 const expenses = require('../models/expenses');
 const { JSON } = require('sequelize');
 const path = require('path');
 const User = require('../models/signUpUser');
-const jwt = require('jsonwebtoken');
 const sequelize = require('../util/database');
 const Incomes = require('../models/incomes');
 
-exports.getExpensesPage = (req, res, next) => {
+exports.getExpensesPage = (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '..', 'public', 'views', 'expense.html'));
 };
 
-exports.postExpeses = async (req, res, next) => {
+exports.postExpeses = async (req, res) => {
   const t = await sequelize.transaction();
   const userExpense = {
     select: req.body.money,
@@ -79,7 +77,7 @@ exports.postExpeses = async (req, res, next) => {
   }
 };
 
-exports.getExpenses = async (req, res, next) => {
+exports.getExpenses = async (req, res) => {
   const t = await sequelize.transaction();
   try {
     const expense = await expenses.findAll({ where: { userId: req.user.id }, transaction: t });
@@ -92,7 +90,7 @@ exports.getExpenses = async (req, res, next) => {
   }
 };
 
-exports.getIncomes = async (req, res, next) => {
+exports.getIncomes = async (req, res) => {
   const t = await sequelize.transaction();
   try {
     const incomes = await Incomes.findAll({ where: { userId: req.user.id }, transaction: t });

@@ -1,11 +1,10 @@
-const express = require('express');
 const User = require('../models/signUpUser');
 const path = require('path');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-exports.getLoginPage = (req, res, next) => {
+exports.getLoginPage = (req, res) => {
   res.sendFile(path.join(__dirname, '../', 'public', 'views', 'login.html'));
 };
 
