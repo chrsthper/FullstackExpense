@@ -1,3 +1,6 @@
+/* global axios */
+
+
 document.getElementById("expenseForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
