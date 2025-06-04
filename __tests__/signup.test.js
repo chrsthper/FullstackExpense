@@ -1,10 +1,8 @@
 import request from 'supertest';
-import { app, sequelize } from '../app.js';
+import { app, sequelize, syncDatabase } from '../app.js';
 
 beforeAll(async () => {
-  // Bersihkan semua tabel untuk mencegah error index unik
-  await sequelize.getQueryInterface().dropAllTables();
-  await sequelize.sync({ force: true, logging: false });
+  await syncDatabase({ force: true }); // Sinkronisasi tabel dengan relasi
 });
 
 afterAll(async () => {

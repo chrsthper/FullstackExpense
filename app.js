@@ -1,8 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config({
-  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
-});
-
 import express from 'express';
 import path, { dirname } from 'path';
 import bodyParser from 'body-parser';
@@ -33,14 +28,22 @@ app.use(signUpRoutes);
 app.use(expenseRoutes);
 app.use(forgetRoutes);
 
-// DB Associations
-User.hasMany(Expenses);
-Expenses.belongsTo(User);
+// Associations
+function setupAssociations() {
+  User.hasMany(Expenses);
+  Expenses.belongsTo(User);
 
-User.hasMany(Incomes);
-Incomes.belongsTo(User);
+  User.hasMany(Incomes);
+  Incomes.belongsTo(User);
 
-User.hasMany(ForgetPassReq);
-ForgetPassReq.belongsTo(User);
+  User.hasMany(ForgetPassReq);
+  ForgetPassReq.belongsTo(User);
+}
 
-export { app, sequelize };
+// Sync helper
+async function syncDatabase(options = {}) {
+  setupAssociations();
+  await sequelize.sync({ ...options });
+}
+
+export { app, sequelize, syncDatabase };

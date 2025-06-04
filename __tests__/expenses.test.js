@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { app, sequelize } from '../app.js';
+import { app, sequelize, syncDatabase } from '../app.js';
 import User from '../models/signUpUser.js';
 import bcrypt from 'bcrypt';
 
@@ -8,12 +8,9 @@ let expenseId;
 
 beforeAll(async () => {
   try {
-    // Drop semua tabel dulu agar sync tidak error karena index duplikat
-    await sequelize.getQueryInterface().dropAllTables();
-    await sequelize.sync({ force: true, logging: false });
-
-    // Buat user & login untuk dapatkan token
+    await syncDatabase({ force: true }); // Pastikan relasi model tersinkron
     const hashedPassword = await bcrypt.hash('test1234', 10);
+
     await User.create({
       name: 'Expense Tester',
       email: 'expense@example.com',
