@@ -1,35 +1,191 @@
-body{
-    background-color: rgb(104, 173, 175);
+body {
+    background-color: #0d1117;
+    color: #e6edf3;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 30px 15px;
 }
 
-h3{
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    padding-top: 20px;
-    color: goldenrod;
-    font-size: 30px;
-    
-
-}
- .main{
-    background-color: darkcyan; 
-    max-width: 760px;
-    max-height: 550px;
-    padding-bottom: 25px;
-}
-label{
-    font-family: 'Times New Roman', Times, serif;
-    font-weight:500;
-    font-size: 18px;
+.tracker-container {
+    background-color: #161b22;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 700px;
+    margin: auto;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
-.head{
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
+    color: #58a6ff;
+}
+
+label {
+    font-size: 14px;
+    color: #c9d1d9;
+}
+
+input,
+select {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    color: #e6edf3;
+}
+
+input::placeholder,
+select {
+    color: #8b949e;
+}
+
+.btn-custom {
+    background-color: #238636;
+    color: #ffffff;
+    font-weight: 500;
+    margin-top: 15px;
+}
+
+.btn-custom:hover {
+    background-color: #2ea043;
+}
+
+/* Gaya untuk tampilan saldo */
+#balance {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    border-radius: 5px;
+    background-color: #1a1e26;
+    border: 1px solid #30363d;
+}
+
+/* Kelas untuk warna saldo positif */
+#balance.positive {
+    color: #2ea043; /* Hijau */
+}
+
+/* Kelas untuk warna saldo negatif */
+#balance.negative {
+    color: #da3633; /* Merah */
+}
+
+
+.section-title {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #c9d1d9;
+}
+
+strong {
+    color: #58a6ff;
+}
+
+/* Gaya untuk setiap item list (kartu pengeluaran/pemasukan) */
+.list-group-item {
+    background-color: #21262d;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease; /* Transisi untuk efek hover */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efek hover untuk item list */
+.list-group-item:hover {
+    background-color: #2a313b; /* Warna latar belakang sedikit lebih terang saat di-hover */
+}
+
+/* Gaya untuk baris ringkasan (Amount, Date, Category) */
+.entry-summary-top-row {
     display: flex;
     justify-content: space-between;
-   
+    align-items: center;
+    width: 100%;
 }
-.b{
+
+.entry-summary-top-row .amount {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #58a6ff;
+}
+
+.entry-summary-top-row .date {
+    font-size: 0.9em;
+    color: #c9d1d9;
+}
+
+.entry-summary-top-row .category {
+    font-size: 0.9em;
+    color: #8b949e;
+    background-color: #30363d;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 10px; /* Jarak dari tanggal */
+}
+
+/* Gaya untuk detail yang tersembunyi */
+.entry-details {
+    display: none; /* Sembunyikan secara default */
+    font-size: 0.85em;
+    color: #c9d1d9;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #30363d;
+}
+
+/* Gaya untuk detail yang ditampilkan */
+.list-group-item.expanded .entry-details {
+    display: block; /* Tampilkan ketika item memiliki kelas 'expanded' */
+}
+
+/* Gaya untuk tombol edit/delete - awal tersembunyi sepenuhnya */
+.entry-action-buttons {
+    position: absolute; /* Posisi absolut untuk hover */
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0; /* Awalnya tidak terlihat */
+    pointer-events: none; /* Penting: tidak bisa diklik saat tidak terlihat */
+    transition: opacity 0.3s ease;
     display: flex;
+    z-index: 2; /* Pastikan tombol di atas konten jika ada */
 }
-.exp-div{
-    max-height: 400px;
+
+/* Tampilkan tombol saat item memiliki kelas 'expanded' */
+.list-group-item.expanded .entry-action-buttons {
+    position: static; /* Kembali ke posisi normal agar berada di bawah detail */
+    transform: none; /* Hapus transform */
+    opacity: 1; /* Tampilkan saat expanded */
+    pointer-events: auto; /* Aktifkan klik saat terlihat */
+    margin-top: 10px; /* Jarak dari detail */
+    justify-content: flex-end; /* Rata kanan saat statis */
+    width: 100%; /* Ambil lebar penuh */
+}
+
+/* Perbaikan warna untuk tombol default Bootstrap agar sesuai tema */
+.btn-sm.btn-danger, .btn.btn-danger {
+    background-color: #da3633;
+    border-color: #da3633;
+    color: #fff;
+}
+.btn-sm.btn-danger:hover, .btn.btn-danger:hover {
+    background-color: #b02a27;
+    border-color: #b02a27;
+}
+.btn-sm.btn-warning, .btn.btn-warning {
+    background-color: #f08800;
+    border-color: #f08800;
+    color: #fff;
+}
+.btn-sm.btn-warning:hover, .btn.btn-warning:hover {
+    background-color: #c26e00;
+    border-color: #c26e00;
 }
