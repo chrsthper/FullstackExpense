@@ -1,3 +1,4 @@
+<!-- public/views/expense.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,54 +7,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Expense Tracker</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="../css/index.css" />
 </head>
 
 <body>
-  <div class="tracker-container">
-    <h2>Expense Tracker</h2>
-    <div id="balance" class="balance-display">Balance: Rp 0</div>
+  <div class="tracker-container container mt-4">
+    <h2 class="text-center text-light">Expense Tracker</h2>
+    <div id="balance" class="text-center text-white mb-4">Balance: Rp 0</div>
 
-    <form id="expenseForm">
+    <form id="expenseForm" class="mb-4">
       <div class="mb-3">
-        <label for="type">Type</label>
+        <label for="type" class="form-label text-white">Type</label>
         <select id="type" class="form-control">
           <option value="income">Income</option>
           <option value="expense">Expense</option>
         </select>
       </div>
       <div class="mb-3">
-        <label for="amount">Amount</label>
+        <label for="amount" class="form-label text-white">Amount</label>
         <input type="text" id="amount" class="form-control" placeholder="e.g. 100000" required />
       </div>
       <div class="mb-3">
-        <label for="desc">Description</label>
+        <label for="desc" class="form-label text-white">Description</label>
         <input type="text" id="desc" class="form-control" placeholder="e.g. Groceries" required />
       </div>
       <div class="mb-3">
-        <label for="category">Category</label>
+        <label for="category" class="form-label text-white">Category</label>
         <select id="category" class="form-control"></select>
       </div>
       <div class="mb-3">
-        <label for="date">Date</label>
+        <label for="date" class="form-label text-white">Date</label>
         <input type="date" id="date" class="form-control" />
       </div>
       <div class="mb-3">
-        <label for="time">Time</label>
+        <label for="time" class="form-label text-white">Time</label>
         <input type="time" id="time" class="form-control" />
       </div>
-      <button type="submit" class="btn btn-custom w-100">Add</button>
+      <button type="submit" class="btn btn-success w-100">Add</button>
     </form>
 
-    <h5 class="section-title">Your Incomes</h5>
+    <h5 class="text-light">Your Incomes</h5>
     <ul id="income-entries" class="list-group mb-4"></ul>
 
-    <h5 class="section-title">Your Expenses</h5>
+    <h5 class="text-light">Your Expenses</h5>
     <ul id="expense-entries" class="list-group"></ul>
   </div>
+  <div class="text-end m-3">
+  <button id="logoutBtn" class="btn btn-danger btn-sm">Logout</button>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="/js/expense.js"></script>
+  <script type="module" src="../js/expense.js"></script>
 </body>
 
 </html>

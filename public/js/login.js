@@ -1,18 +1,24 @@
-/* global axios */
-
+import { auth } from "./firebase-config.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 document.getElementById('loginForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const email  = document.getElementById('email').value;
+  const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
 
   try {
-    const response = await axios.post('http://localhost:4000/login/validiation', { email, password });
-    localStorage.setItem('token', response.data.token);
-    window.location.href = '/expense-page';
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Simpan info user di localStorage
+    localStorage.setItem("userId", user.uid);
+    localStorage.setItem("email", user.email);
+
+    // Arahkan ke halaman utama setelah login
+    window.location.href = "expense.html";
   } catch (err) {
-    console.error(err);
-    alert('Login failed');
+    console.error("Login error:", err);
+    alert("Login failed: " + err.message);
   }
 });
