@@ -57,7 +57,7 @@ jobs:
         run: echo "${{ secrets.ENV_TEST }}" > .env.test
 
       # --- DEBUGGING: Temporarily view .env.test contents (REMOVE THIS IN PROD) ---
-      - name: Debug: View .env.test content
+      - name: Debug: View .env.test content # Cleaned this line
         run: cat .env.test
         # Make sure this does NOT print sensitive info if ENV_TEST contains non-DB secrets
 
