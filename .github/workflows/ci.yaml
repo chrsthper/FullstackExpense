@@ -15,6 +15,7 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: expense_tracker_test # Pre-create the database in the service
         ports:
           - 3306:3306
         options: >-
@@ -32,18 +33,33 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Wait for MySQL to be ready
-        run: sleep 20
-
-      - name: Create test database
+      # Use a robust wait-for-it mechanism
+      - name: Wait for MySQL to be ready (robust check)
         run: |
-          mysql -h 127.0.0.1 -u root -e "CREATE DATABASE IF NOT EXISTS expense_tracker_test;"
+          echo "Waiting for MySQL service to be fully ready..."
+          for i in $(seq 1 60); do # Increased timeout to 60 seconds
+            mysql -h 127.0.0.1 -u root -e "SELECT 1;" > /dev/null 2>&1 && break
+            echo "Attempt $i: MySQL not yet ready, waiting 1 second..."
+            sleep 1
+          done
+          mysql -h 127.0.0.1 -u root -e "SELECT 1;" || { echo "MySQL did not become ready after multiple attempts!"; exit 1; }
+          echo "MySQL is ready!"
+
+      # No need to create database here if MYSQL_DATABASE is set in services
+      # - name: Create test database # This step might be redundant if MYSQL_DATABASE is set in services
+      #   run: |
+      #     mysql -h 127.0.0.1 -u root -e "CREATE DATABASE IF NOT EXISTS expense_tracker_test;"
 
       - name: Install dependencies
         run: npm install
 
       - name: Create .env.test file from secret
         run: echo "${{ secrets.ENV_TEST }}" > .env.test
+
+      # --- DEBUGGING: Temporarily view .env.test contents (REMOVE THIS IN PROD) ---
+      - name: Debug: View .env.test content
+        run: cat .env.test
+        # Make sure this does NOT print sensitive info if ENV_TEST contains non-DB secrets
 
       - name: Run ESLint
         run: npm run lint
