@@ -26,6 +26,10 @@ export default defineConfig([
     language: "css/css", 
     extends: ["css/recommended"] 
   },
+  {
+  ignores: ["__tests__/"]
+  },
+
   // 👇 Tambahkan blok override ini di paling bawah
   {
     files: ["package-lock.json"],
