@@ -1,4 +1,6 @@
-require('dotenv').config();
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
+});
 
 const express = require('express');
 const path = require('path');
@@ -7,7 +9,7 @@ const sequelize = require('./util/database');
 
 // Import models
 const User = require('./models/signUpUser');
-const expenses = require('./models/expenses');
+const Expenses = require('./models/expenses');
 const Incomes = require('./models/incomes');
 const ForgetPassReq = require('./models/forgetPassReq');
 
@@ -18,23 +20,21 @@ const expenseRoutes = require('./routes/expenses');
 const forgetRoutes = require('./routes/forget');
 
 const app = express();
-const port = process.env.PORT || 4000;
 
-// Middleware - harus diletakkan sebelum routes
-app.use(express.json()); // untuk parsing application/json
-app.use(bodyParser.urlencoded({ extended: false })); // untuk parsing form data
-
-// Static file serving
+// Middleware
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
 // Routes
 app.use(loginRoutes);
 app.use(signUpRoutes);
 app.use(expenseRoutes);
-app.use(forgetRoutes); // <- letakkan setelah express.json()
+app.use(forgetRoutes);
 
-// Associations
-User.hasMany(expenses);
-expenses.belongsTo(User);
+// DB Associations
+User.hasMany(Expenses);
+Expenses.belongsTo(User);
 
 User.hasMany(Incomes);
 Incomes.belongsTo(User);
@@ -42,13 +42,5 @@ Incomes.belongsTo(User);
 User.hasMany(ForgetPassReq);
 ForgetPassReq.belongsTo(User);
 
-// DB Sync & Start Server
-sequelize.sync()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server is Running on port ${port}`);
-    });
-  })
-  .catch(err => {
-    console.log(err);
-  });
+// Export for testing or server start
+module.exports = { app, sequelize };
