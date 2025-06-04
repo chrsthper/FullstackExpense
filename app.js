@@ -1,3 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config({
+  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
+});
+
 import express from 'express';
 import path, { dirname } from 'path';
 import bodyParser from 'body-parser';

@@ -2,7 +2,9 @@ import request from 'supertest';
 import { app, sequelize } from '../app.js';
 
 beforeAll(async () => {
-  await sequelize.sync({ force: true });
+  // Bersihkan semua tabel untuk mencegah error index unik
+  await sequelize.getQueryInterface().dropAllTables();
+  await sequelize.sync({ force: true, logging: false });
 });
 
 afterAll(async () => {

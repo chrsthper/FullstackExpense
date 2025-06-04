@@ -7,24 +7,30 @@ let token;
 let expenseId;
 
 beforeAll(async () => {
-  await sequelize.sync({ force: true });
+  try {
+    // Drop semua tabel dulu agar sync tidak error karena index duplikat
+    await sequelize.getQueryInterface().dropAllTables();
+    await sequelize.sync({ force: true, logging: false });
 
-  // Buat user & login untuk dapatkan token
-  const hashedPassword = await bcrypt.hash('test1234', 10);
-  await User.create({
-    name: 'Expense Tester',
-    email: 'expense@example.com',
-    password: hashedPassword,
-    totalExpense: 0,
-    totalIncome: 0
-  });
+    // Buat user & login untuk dapatkan token
+    const hashedPassword = await bcrypt.hash('test1234', 10);
+    await User.create({
+      name: 'Expense Tester',
+      email: 'expense@example.com',
+      password: hashedPassword,
+      totalExpense: 0,
+      totalIncome: 0
+    });
 
-  const loginRes = await request(app).post('/login/validiation').send({
-    email: 'expense@example.com',
-    password: 'test1234'
-  });
+    const loginRes = await request(app).post('/login/validiation').send({
+      email: 'expense@example.com',
+      password: 'test1234'
+    });
 
-  token = loginRes.body.token;
+    token = loginRes.body.token;
+  } catch (err) {
+    console.error('❌ Error in beforeAll expenses.test.js:', err);
+  }
 });
 
 afterAll(async () => {
