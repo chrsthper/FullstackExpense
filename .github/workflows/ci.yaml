@@ -15,7 +15,7 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: expense_tracker_test # Pre-create the database in the service
+          MYSQL_DATABASE: expense_tracker_test # KEEP THIS LINE!
         ports:
           - 3306:3306
         options: >-
@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: '18'
 
-      # Use a robust wait-for-it mechanism
+      # Use a robust wait-for-it mechanism - KEEP THIS BLOCK!
       - name: Wait for MySQL to be ready (robust check)
         run: |
           echo "Waiting for MySQL service to be fully ready..."
@@ -45,8 +45,9 @@ jobs:
           mysql -h 127.0.0.1 -u root -e "SELECT 1;" || { echo "MySQL did not become ready after multiple attempts!"; exit 1; }
           echo "MySQL is ready!"
 
-      # No need to create database here if MYSQL_DATABASE is set in services
-      # - name: Create test database # This step might be redundant if MYSQL_DATABASE is set in services
+      # No need for this "Create test database" step if MYSQL_DATABASE is set in services.
+      # You can comment it out or remove it.
+      # - name: Create test database
       #   run: |
       #     mysql -h 127.0.0.1 -u root -e "CREATE DATABASE IF NOT EXISTS expense_tracker_test;"
 
@@ -57,7 +58,7 @@ jobs:
         run: echo "${{ secrets.ENV_TEST }}" > .env.test
 
       # --- DEBUGGING: Temporarily view .env.test contents (REMOVE THIS IN PROD) ---
-      - name: Debug: View .env.test content # Cleaned this line
+      - name: Debug: View .env.test content
         run: cat .env.test
         # Make sure this does NOT print sensitive info if ENV_TEST contains non-DB secrets
 
