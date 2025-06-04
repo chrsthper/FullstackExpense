@@ -1,12 +1,9 @@
-const { app, sequelize } = require('./app');
-const port = process.env.PORT || 4000;
+import { app, sequelize } from './app.js';
 
-sequelize.sync()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`🚀 Server is Running on port ${port}`);
-    });
-  })
-  .catch(err => {
-    console.error('❌ Error connecting to database:', err);
+const port = process.env.PORT || 3000;
+
+sequelize.sync().then(() => {
+  app.listen(port, () => {
+    console.log(`🚀 Server is Running on port ${port}`);
   });
+});

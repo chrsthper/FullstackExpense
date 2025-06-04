@@ -1,25 +1,21 @@
-require('dotenv').config({
-  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
-});
+import express from 'express';
+import path, { dirname } from 'path';
+import bodyParser from 'body-parser';
+import { fileURLToPath } from 'url';
+import sequelize from './util/database.js';
 
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const sequelize = require('./util/database');
+import User from './models/signUpUser.js';
+import Expenses from './models/expenses.js';
+import Incomes from './models/incomes.js';
+import ForgetPassReq from './models/forgetPassReq.js';
 
-// Import models
-const User = require('./models/signUpUser');
-const Expenses = require('./models/expenses');
-const Incomes = require('./models/incomes');
-const ForgetPassReq = require('./models/forgetPassReq');
-
-// Import routes
-const loginRoutes = require('./routes/login');
-const signUpRoutes = require('./routes/signUp');
-const expenseRoutes = require('./routes/expenses');
-const forgetRoutes = require('./routes/forget');
+import loginRoutes from './routes/login.js';
+import signUpRoutes from './routes/signUp.js';
+import expenseRoutes from './routes/expenses.js';
+import forgetRoutes from './routes/forget.js';
 
 const app = express();
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Middleware
 app.use(express.json());
@@ -42,5 +38,4 @@ Incomes.belongsTo(User);
 User.hasMany(ForgetPassReq);
 ForgetPassReq.belongsTo(User);
 
-// Export for testing or server start
-module.exports = { app, sequelize };
+export { app, sequelize };

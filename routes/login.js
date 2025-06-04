@@ -1,13 +1,9 @@
-const express = require('express');
-const loginContoller = require('../controllers/login');
+import express from 'express';
+import { getLoginPage, postValidiateLogin } from '../controllers/login.js';
+
 const router = express.Router();
 
-router.get('/',loginContoller.getLoginPage);
-router.post('/login/validiation' , loginContoller.postValidiateLogin);
+router.get('/', getLoginPage);
+router.post('/login/validiation', postValidiateLogin);
 
-
-
-
-
-
-module.exports = router;
+export default router;

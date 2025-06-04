@@ -11,7 +11,7 @@ beforeAll(async () => {
 
   // Buat user & login untuk dapatkan token
   const hashedPassword = await bcrypt.hash('test1234', 10);
-  const user = await User.create({
+  await User.create({
     name: 'Expense Tester',
     email: 'expense@example.com',
     password: hashedPassword,

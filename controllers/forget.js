@@ -1,60 +1,45 @@
-const path = require('path');
-const User = require('../models/signUpUser');
-const ForgetPassReq = require('../models/forgetPassReq');
-const bcrypt = require('bcrypt');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import ForgetPassReq from '../models/forgetPassReq.js';
+import User from '../models/signUpUser.js';
+import bcrypt from 'bcrypt';
 
-exports.getForgetPasswordPage = (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/views/forgetPassword.html'));
-};
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-exports.handleForgetPassword = async (req, res) => {
+export function getForgetPasswordPage(req, res) {
+  res.sendFile(path.join(__dirname, '../public/views/forgetpassword.html'));
+}
+
+export async function handleForgetPassword(req, res) {
   const { email } = req.body;
-  try {
-    const user = await User.findOne({ where: { email } });
+  const user = await User.findOne({ where: { email } });
 
-    if (!user) {
-      return res.status(404).json({ success: false, message: 'Email tidak ditemukan' });
-    }
+  if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const reqRecord = await ForgetPassReq.create({
-      isActive: true,
-      userId: user.id
-    });
+  const request = await ForgetPassReq.create({
+    userId: user.id,
+    isActive: true,
+  });
 
-    return res.status(200).json({
-      success: true,
-      redirectUrl: `/reset-password?reqId=${reqRecord.id}`
-    });
+  res.redirect(`/reset-password?reqId=${request.id}`);
+}
 
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ success: false, message: 'Server error' });
-  }
-};
-
-exports.getResetPage = (req, res) => {
+export function getResetPage(req, res) {
   res.sendFile(path.join(__dirname, '../public/views/resetPage.html'));
-};
+}
 
-exports.postResetPassword = async (req, res) => {
-  const { reqId, newPassword } = req.body;
+export async function postResetPassword(req, res) {
+  const { password } = req.body;
+  const { reqId } = req.query;
 
-  try {
-    const request = await ForgetPassReq.findOne({ where: { id: reqId, isActive: true } });
-    if (!request) {
-      return res.status(400).json({ success: false, message: 'Invalid or expired request' });
-    }
+  const request = await ForgetPassReq.findOne({ where: { id: reqId, isActive: true } });
+  if (!request) return res.status(400).json({ message: 'Invalid or expired request' });
 
-    const user = await User.findOne({ where: { id: request.userId } });
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await User.update({ password: hashedPassword }, { where: { id: request.userId } });
+  await request.update({ isActive: false });
 
-    const hashed = await bcrypt.hash(newPassword, 10);
-    await user.update({ password: hashed });
-    await request.update({ isActive: false });
-
-    return res.status(200).json({ success: true, message: 'Password berhasil diubah' });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Server error' });
-  }
-};
+  res.status(200).json({ message: 'Password reset successful' });
+}

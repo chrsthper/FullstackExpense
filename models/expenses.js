@@ -1,20 +1,18 @@
-const Sequelize = require('sequelize')
+import Sequelize from 'sequelize';
+import sequelize from '../util/database.js';
 
-const sequelize = require('../util/database');
-
-const expenses = sequelize.define('expenses' ,{
-      id:{
-          type: Sequelize.INTEGER,
-          autoIncrement: true,
-          allowNull: false,
-          primaryKey:true
-      },
-      amount:Sequelize.STRING,
-      description: Sequelize.STRING,
-      category: Sequelize.STRING,
-      date:Sequelize.STRING,
-      time:Sequelize.STRING
-
+const expenses = sequelize.define('expenses', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true
+  },
+  amount: Sequelize.STRING,
+  description: Sequelize.STRING,
+  category: Sequelize.STRING,
+  date: Sequelize.STRING,
+  time: Sequelize.STRING
 });
 
-module.exports = expenses;
+export default expenses;

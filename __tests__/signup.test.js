@@ -1,6 +1,5 @@
 const request = require('supertest');
 const { app, sequelize } = require('../app');
-const User = require('../models/signUpUser');
 
 beforeAll(async () => {
   await sequelize.sync({ force: true }); // Reset semua tabel

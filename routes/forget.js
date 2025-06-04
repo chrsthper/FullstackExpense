@@ -1,10 +1,16 @@
-const express = require('express');
+import express from 'express';
+import {
+  getForgetPasswordPage,
+  handleForgetPassword,
+  getResetPage,
+  postResetPassword
+} from '../controllers/forget.js';
+
 const router = express.Router();
-const forgetController = require('../controllers/forget');
 
-router.get('/forget-password', forgetController.getForgetPasswordPage);
-router.post('/forget-password', forgetController.handleForgetPassword);
-router.get('/reset-password', forgetController.getResetPage);
-router.post('/reset-password', forgetController.postResetPassword);
+router.get('/forget-password', getForgetPasswordPage);
+router.post('/forget-password', handleForgetPassword);
+router.get('/reset-password', getResetPage);
+router.post('/reset-password', postResetPassword);
 
-module.exports = router;
+export default router;

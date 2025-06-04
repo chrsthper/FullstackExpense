@@ -1,18 +1,25 @@
-const User = require('../models/signUpUser');
-const path = require('path');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+import User from '../models/signUpUser.js';
+import path from 'path';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import dotenv from 'dotenv';
 
-exports.getLoginPage = (req, res) => {
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export function getLoginPage(req, res) {
   res.sendFile(path.join(__dirname, '../', 'public', 'views', 'login.html'));
-};
+}
 
-exports.postValidiateLogin = async (req, res) => {
+export async function postValidiateLogin(req, res) {
   const { email, password } = req.body;
 
   function generateWebToken(id) {
-    return jwt.sign({ userId: id }, '123456abcdef'); // gunakan env var di production
+    return jwt.sign({ userId: id }, '123456abcdef');
   }
 
   try {
@@ -29,9 +36,8 @@ exports.postValidiateLogin = async (req, res) => {
 
     const token = generateWebToken(user.id);
     return res.status(200).json({ success: true, message: 'Login successful', token });
-
   } catch (error) {
     console.error('Login error:', error);
     return res.status(500).json({ success: false, message: 'Server error' });
   }
-};
+}

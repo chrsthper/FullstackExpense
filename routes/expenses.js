@@ -1,18 +1,32 @@
-const express = require('express');
+import express from 'express';
+import {
+  getExpensesPage,
+  postExpeses,
+  postInTotalExpense,
+  getExpenses,
+  getIncomes,
+  deleteExpense,
+  deleteIncome,
+  getDescreasExpense,
+  getBalance
+} from '../controllers/expense.js';
+import uerAuthentication from '../middlerware/auth.js';
+
 const router = express.Router();
-const expenseController = require('../controllers/expense');
-const uerAuthentication = require('../middlerware/auth');
 
-router.get('/expense-page', expenseController.getExpensesPage);
-router.post('/register-expense',uerAuthentication.authentication,expenseController.postExpeses,uerAuthentication.authentication,expenseController.postInTotalExpense);
-router.get('/expenses', uerAuthentication.authentication ,expenseController.getExpenses);
-router.get('/incomes', uerAuthentication.authentication ,expenseController.getIncomes);
+router.get('/expense-page', getExpensesPage);
+router.post(
+  '/register-expense',
+  uerAuthentication.authentication,
+  postExpeses,
+  uerAuthentication.authentication,
+  postInTotalExpense
+);
+router.get('/expenses', uerAuthentication.authentication, getExpenses);
+router.get('/incomes', uerAuthentication.authentication, getIncomes);
+router.delete('/expenses/:id', uerAuthentication.authentication, deleteExpense);
+router.delete('/incomes/:id', uerAuthentication.authentication, deleteIncome);
+router.post('/decreas-exspense', uerAuthentication.authentication, getDescreasExpense);
+router.get('/balance', uerAuthentication.authentication, getBalance);
 
-router.delete('/expenses/:id', uerAuthentication.authentication, expenseController.deleteExpense);
-router.delete('/incomes/:id', uerAuthentication.authentication, expenseController.deleteIncome);
-router.post('/decreas-exspense',uerAuthentication.authentication, expenseController.getDescreasExpense);
-router.get('/balance',uerAuthentication.authentication,expenseController.getBalance);
-
-
-
-module.exports = router;
+export default router;

@@ -1,22 +1,19 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/signUpUser');
+import jwt from 'jsonwebtoken';
 
-exports.authentication = async (req, res, next) => {
-  const token = req.header("Authorization");
-  if (!token || !token.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "Token missing or badly formatted" });
+const authentication = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'Token missing or badly formatted' });
   }
-
-  const realToken = token.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(realToken, '123456abcdef');
-    const user = await User.findByPk(decoded.userId);
-    if (!user) return res.status(401).json({ error: "User not found" });
-
-    req.user = user;
+    const decoded = jwt.verify(token, '123456abcdef');
+    req.user = { id: decoded.userId }; // sesuaikan jika kamu menyimpan info lebih
     next();
-  } catch  {
-    res.status(401).json({ error: "Unauthorized" });
+  } catch {
+    return res.status(401).json({ message: 'Invalid token' });
   }
 };
+
+export default { authentication };
