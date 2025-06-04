@@ -10,6 +10,28 @@ jobs:
   ci-pipeline:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: expense_tracker_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "mysqladmin ping --silent"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
+    env:
+      DB_HOST: 127.0.0.1
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: expense_tracker_test
+      PORT: 3000
+      NODE_ENV: test
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -19,6 +41,9 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Wait for MySQL to be ready
+        run: sleep 15
+
       - name: Install dependencies
         run: npm install
 
@@ -26,4 +51,4 @@ jobs:
         run: npm run lint
 
       - name: Run Jest Unit Tests
-        run: npm test
+        run: node --experimental-vm-modules node_modules/jest/bin/jest.js
