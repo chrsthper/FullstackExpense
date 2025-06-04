@@ -1,17 +1,24 @@
+name: CI - Lint & Test
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
 jobs:
   ci-pipeline:
     runs-on: ubuntu-latest
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:5.7
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: expense_tracker_test
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping --silent"
+          --health-cmd="mysqladmin ping"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -26,26 +33,20 @@ jobs:
           node-version: '18'
 
       - name: Wait for MySQL to be ready
-        run: |
-          sudo apt-get install -y mysql-client
-          until mysqladmin ping -h 127.0.0.1 --silent; do
-            echo "Waiting for MySQL..."
-            sleep 2
-          done
+        run: sleep 20
 
-      - name: Create .env.test
+      - name: Create test database
         run: |
-          echo "DB_HOST=127.0.0.1" >> .env.test
-          echo "DB_USER=root" >> .env.test
-          echo "DB_PASSWORD=root" >> .env.test
-          echo "DB_NAME=expense_tracker_test" >> .env.test
-          echo "PORT=3000" >> .env.test
+          mysql -h 127.0.0.1 -u root -e "CREATE DATABASE IF NOT EXISTS expense_tracker_test;"
 
       - name: Install dependencies
         run: npm install
+
+      - name: Create .env.test file from secret
+        run: echo "${{ secrets.ENV_TEST }}" > .env.test
 
       - name: Run ESLint
         run: npm run lint
 
       - name: Run Jest Unit Tests
-        run: node --experimental-vm-modules node_modules/jest/bin/jest.js
+        run: npm test
