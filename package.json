@@ -4,7 +4,8 @@
   "description": "Frontend app with Firebase served by Node.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "lint": "eslint ."
   },
   "dependencies": {
     "express": "^4.18.2"
