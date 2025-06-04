@@ -1,7 +1,7 @@
-const request = require('supertest');
-const { app, sequelize } = require('../app');
-const User = require('../models/signUpUser');
-const bcrypt = require('bcrypt');
+import request from 'supertest';
+import { app, sequelize } from '../app.js';
+import User from '../models/signUpUser.js';
+import bcrypt from 'bcrypt';
 
 let token;
 let expenseId;
@@ -37,7 +37,7 @@ describe('Expense Endpoints', () => {
       .post('/register-expense')
       .set('Authorization', `Bearer ${token}`)
       .send({
-        money: 0, // 0 berarti expense
+        money: 0,
         amount: 150000,
         description: 'Makan siang',
         category: 'Makanan',
@@ -57,7 +57,7 @@ describe('Expense Endpoints', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.allExpense).toBeInstanceOf(Array);
     expect(res.body.allExpense.length).toBeGreaterThan(0);
-    expenseId = res.body.allExpense[0].id; // simpan ID untuk test delete
+    expenseId = res.body.allExpense[0].id;
   });
 
   it('❌ should delete an expense by ID', async () => {

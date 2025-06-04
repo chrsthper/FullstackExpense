@@ -1,8 +1,8 @@
-const request = require('supertest');
-const { app, sequelize } = require('../app');
+import request from 'supertest';
+import { app, sequelize } from '../app.js';
 
 beforeAll(async () => {
-  await sequelize.sync({ force: true }); // Reset semua tabel
+  await sequelize.sync({ force: true });
 });
 
 afterAll(async () => {
@@ -29,7 +29,7 @@ describe('POST /register', () => {
       .post('/register')
       .send({
         name: 'Another User',
-        email: 'newuser@example.com', // Email yang sama seperti test sebelumnya
+        email: 'newuser@example.com',
         password: 'anotherpassword'
       });
 

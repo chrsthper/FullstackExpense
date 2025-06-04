@@ -1,7 +1,7 @@
-const request = require('supertest');
-const { app, sequelize } = require('../app');
-const User = require('../models/signUpUser');
-const bcrypt = require('bcrypt');
+import request from 'supertest';
+import { app, sequelize } from '../app.js';
+import User from '../models/signUpUser.js';
+import bcrypt from 'bcrypt';
 
 beforeAll(async () => {
   await sequelize.sync({ force: true }); // Reset tabel
