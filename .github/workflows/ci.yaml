@@ -1,36 +1,20 @@
-name: CI - Lint & Test
-
-on:
-  push:
-    branches: [ main, dev ]
-  pull_request:
-    branches: [ main, dev ]
-
 jobs:
   ci-pipeline:
     runs-on: ubuntu-latest
 
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: expense_tracker_test
         ports:
           - 3306:3306
         options: >-
-          --health-cmd "mysqladmin ping --silent"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 3
-
-    env:
-      DB_HOST: 127.0.0.1
-      DB_USER: root
-      DB_PASSWORD: root
-      DB_NAME: expense_tracker_test
-      PORT: 3000
-      NODE_ENV: test
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout Repository
@@ -42,7 +26,20 @@ jobs:
           node-version: '18'
 
       - name: Wait for MySQL to be ready
-        run: sleep 15
+        run: |
+          sudo apt-get install -y mysql-client
+          until mysqladmin ping -h 127.0.0.1 --silent; do
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+
+      - name: Create .env.test
+        run: |
+          echo "DB_HOST=127.0.0.1" >> .env.test
+          echo "DB_USER=root" >> .env.test
+          echo "DB_PASSWORD=root" >> .env.test
+          echo "DB_NAME=expense_tracker_test" >> .env.test
+          echo "PORT=3000" >> .env.test
 
       - name: Install dependencies
         run: npm install
