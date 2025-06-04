@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../util/database');
+import Sequelize from 'sequelize';
+import sequelize from '../util/database.js';
 
 const ForgetPassReq = sequelize.define('forgetPassReqs', {
   id: {
@@ -15,4 +15,4 @@ const ForgetPassReq = sequelize.define('forgetPassReqs', {
   }
 });
 
-module.exports = ForgetPassReq;
+export default ForgetPassReq;

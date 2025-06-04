@@ -1,54 +1,49 @@
-require('dotenv').config();
+import express from 'express';
+import path, { dirname } from 'path';
+import bodyParser from 'body-parser';
+import { fileURLToPath } from 'url';
+import sequelize from './util/database.js';
 
-const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-const sequelize = require('./util/database');
+import User from './models/signUpUser.js';
+import Expenses from './models/expenses.js';
+import Incomes from './models/incomes.js';
+import ForgetPassReq from './models/forgetPassReq.js';
 
-// Import models
-const User = require('./models/signUpUser');
-const expenses = require('./models/expenses');
-const Incomes = require('./models/incomes');
-const ForgetPassReq = require('./models/forgetPassReq');
-
-// Import routes
-const loginRoutes = require('./routes/login');
-const signUpRoutes = require('./routes/signUp');
-const expenseRoutes = require('./routes/expenses');
-const forgetRoutes = require('./routes/forget');
+import loginRoutes from './routes/login.js';
+import signUpRoutes from './routes/signUp.js';
+import expenseRoutes from './routes/expenses.js';
+import forgetRoutes from './routes/forget.js';
 
 const app = express();
-const port = process.env.PORT || 4000;
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Middleware - harus diletakkan sebelum routes
-app.use(express.json()); // untuk parsing application/json
-app.use(bodyParser.urlencoded({ extended: false })); // untuk parsing form data
-
-// Static file serving
+// Middleware
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
 // Routes
 app.use(loginRoutes);
 app.use(signUpRoutes);
 app.use(expenseRoutes);
-app.use(forgetRoutes); // <- letakkan setelah express.json()
+app.use(forgetRoutes);
 
 // Associations
-User.hasMany(expenses);
-expenses.belongsTo(User);
+function setupAssociations() {
+  User.hasMany(Expenses);
+  Expenses.belongsTo(User);
 
-User.hasMany(Incomes);
-Incomes.belongsTo(User);
+  User.hasMany(Incomes);
+  Incomes.belongsTo(User);
 
-User.hasMany(ForgetPassReq);
-ForgetPassReq.belongsTo(User);
+  User.hasMany(ForgetPassReq);
+  ForgetPassReq.belongsTo(User);
+}
 
-// DB Sync & Start Server
-sequelize.sync()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server is Running on port ${port}`);
-    });
-  })
-  .catch(err => {
-    console.log(err);
-  });
+// Sync helper
+async function syncDatabase(options = {}) {
+  setupAssociations();
+  await sequelize.sync({ ...options });
+}
+
+export { app, sequelize, syncDatabase };

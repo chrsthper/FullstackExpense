@@ -6,99 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Expense Tracker</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <style>
-    body {
-      background-color: #0d1117;
-      color: #e6edf3;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 30px 15px;
-    }
-
-    .tracker-container {
-      background-color: #161b22;
-      padding: 30px;
-      border-radius: 10px;
-      max-width: 700px;
-      margin: auto;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      font-weight: 600;
-      color: #58a6ff;
-    }
-
-    label {
-      font-size: 14px;
-      color: #c9d1d9;
-    }
-
-    input,
-    select {
-      background-color: #0d1117;
-      border: 1px solid #30363d;
-      color: #e6edf3;
-    }
-
-    input::placeholder,
-    select {
-      color: #8b949e;
-    }
-
-    .btn-custom {
-      background-color: #238636;
-      color: #ffffff;
-      font-weight: 500;
-      margin-top: 15px;
-    }
-
-    .btn-custom:hover {
-      background-color: #2ea043;
-    }
-
-    .list-group-item {
-      background-color: #21262d;
-      color: #e6edf3;
-      border: 1px solid #30363d;
-    }
-
-    #balance {
-      color: #2ea043;
-      font-size: 22px;
-      font-weight: bold;
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .section-title {
-      margin-top: 30px;
-      margin-bottom: 10px;
-      font-weight: 600;
-      color: #c9d1d9;
-    }
-
-    strong {
-      color: #58a6ff;
-    }
-
-    .btn-danger,
-    .btn-warning {
-      font-size: 12px;
-      padding: 3px 8px;
-    }
-
-    .entry-content {
-      font-size: 14px;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/index.css">
 </head>
 
 <body>
   <div class="tracker-container">
     <h2>Expense Tracker</h2>
+    <div id="balance" class="balance-display">Balance: Rp 0</div>
+
     <form id="expenseForm">
       <div class="mb-3">
         <label for="type">Type</label>
@@ -129,8 +44,6 @@
       </div>
       <button type="submit" class="btn btn-custom w-100">Add</button>
     </form>
-
-    <div id="balance">Balance: Rp 0</div>
 
     <h5 class="section-title">Your Incomes</h5>
     <ul id="income-entries" class="list-group mb-4"></ul>
