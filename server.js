@@ -1,5 +1,12 @@
-const express = require("express");
-const path = require("path");
+// server.js
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+// Konversi __filename dan __dirname untuk ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
