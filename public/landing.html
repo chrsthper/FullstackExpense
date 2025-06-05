@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Halaman Utama - Pelacak Pengeluaran</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-image: linear-gradient(to bottom right, #007718, #2CAE45);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Mencegah scroll jika gambar terlalu besar */
+            flex-direction: column; /* Mengubah arah flex menjadi kolom untuk menampung header di atas */
+        }
+        /* Penyesuaian untuk header baru */
+        .header-container {
+            display: flex;
+            justify-content: space-between; /* Menempatkan item di ujung berlawanan */
+            align-items: center; /* Rata tengah secara vertikal */
+            padding: 50px 50px; /* Padding sama dengan left-panel */
+            width: 100%;
+            box-sizing: border-box; /* Pastikan padding termasuk dalam lebar */
+        }
+        .container {
+            display: flex;
+            justify-content: space-between; /* Menempatkan item di ujung berlawanan */
+            align-items: center; /* Rata tengah secara vertikal */
+            padding: 80px 50px; /* Padding sama dengan left-panel */
+            width: 100%;
+            box-sizing: border-box; /* Pastikan padding termasuk dalam lebar */
+        }
+        .logo-container {
+            /* Position absolute dihapus karena sudah diatur oleh flexbox pada header-container */
+            position: static; /* Mengatur ulang posisi agar tidak absolut */
+            top: auto;
+            left: auto;
+            z-index: 1000; /* Tetap pertahankan z-index jika ada elemen lain yang tumpang tindih */
+        }
+        .logo-container img {
+            width: 200px;
+            height: auto;
+        }
+        .header-buttons {
+            display: flex; /* Untuk menata tombol secara horizontal */
+            gap: 15px; /* Jarak antar tombol */
+            text-align: center;
+        }
+        .header-buttons .btn {
+            background-color: transparent; /* Ubah warna latar belakang tombol header */
+            border: 2px solid transparent;
+            color: #ffffff;
+            padding: 8px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .header-buttons .btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);;
+            color: #ffffff;
+        }
+        .header-buttons .btn1 {
+            background-color: transparent; /* Ubah warna latar belakang tombol header */
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            padding: 8px 18px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .header-buttons .btn1:hover {
+            background-color: #ffffff;
+            color: #1e3a24;
+        }
+
+        /* Konten utama halaman */
+        .main-content {
+            display: flex;
+            flex-grow: 1; /* Memastikan konten utama mengisi sisa ruang */
+            width: 100%;
+        }
+
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 50px;
+            /* position: relative; ini tidak lagi diperlukan di sini karena logo sudah di header */
+        }
+        .right-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px; /* Sedikit padding agar gambar tidak terlalu mepet tepi */
+        }
+        .right-panel img {
+            max-width: 80%; /* Agar gambar responsif */
+            height: auto;
+            display: block;
+        }
+        .separator {
+            width: 150px;
+            height: 6px;
+            background-color: #e9e9e9;
+            border: none;
+            margin: 10px auto 10px 0;
+            border-radius: 3px;
+        }
+        h1 {
+            font-size: 5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        p {
+            font-size: 1.5rem;
+            margin-bottom: 35px;
+            margin-top: 10px;
+        }
+        .btn-yellow {
+            background-color: #eca500;
+            border: 2px solid #eca500;
+            color: #ffffff;
+            padding: 10px 30px;
+            border-radius: 6px;
+            margin-right: 15px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bolder;
+            transition: all 0.3s ease;
+        }
+        .btn-yellow:hover {
+            background-color: #aa7700;
+            border: 2px solid #aa7700;
+            color: #c49f48;
+        }
+        
+        /* Responsiveness */
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+                height: auto; /* Izinkan scroll pada layar kecil */
+            }
+            .header-container {
+                flex-direction: column; /* Tumpuk logo dan tombol pada layar kecil */
+                padding: 20px 30px;
+            }
+            .logo-container {
+                margin-bottom: 20px; /* Beri jarak antara logo dan tombol */
+            }
+            .header-buttons {
+                flex-direction: column; /* Tumpuk tombol pada layar kecil */
+                gap: 10px;
+                width: 100%;
+            }
+            .header-buttons .btn {
+                width: 100%; /* Buat tombol memenuhi lebar */
+            }
+            .header-buttons .btn1 {
+                width: 100%; /* Buat tombol memenuhi lebar */
+            }
+            .left-panel, .right-panel {
+                flex: none; /* Nonaktifkan pertumbuhan flex */
+                width: 100%;
+                padding: 30px;
+                text-align: center;
+            }
+            .logo-container img {
+                width: 150px;
+            }
+            .separator {
+                margin: 10px auto;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+            .right-panel img {
+                max-width: 90%;
+            }
+        }
+        @media (max-width: 576px) {
+            .btn-yellow {
+                display: block;
+                margin-bottom: 15px;
+                margin-right: 0;
+            }
+            .logo-container img {
+                width: 120px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="logo-container">
+            <img src="img/logo1.png" alt="Logo">
+        </div>
+        <div class="header-buttons">
+            <a href="login.html" class="btn">Login</a>
+            <a href="signUp.html" class="btn1">Sign Up</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="left-panel">
+            <h1>Master Your Money,<br>Achieve Your Goals!</h1>
+            <hr class="separator" />
+            <p>Seamless financial tracking for a brighter future. </p>
+            <div>
+                <a href="login.html" class="btn-yellow">Explore Now!</a>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <img src="image_9e3e2b.png" alt="Tampilan Formulir Pendaftaran dan Login Aplikasi">
+        </div>
+    </div>
+    <div class="container"></div>
+</body>
+</html>

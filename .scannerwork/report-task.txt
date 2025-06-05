@@ -1,0 +1,6 @@
+projectKey=expense-app
+serverUrl=http://localhost:9000
+serverVersion=25.6.0.109173
+dashboardUrl=http://localhost:9000/dashboard?id=expense-app
+ceTaskId=3fb6448e-1f73-4aec-9546-2199c2c57ae8
+ceTaskUrl=http://localhost:9000/api/ce/task?id=3fb6448e-1f73-4aec-9546-2199c2c57ae8

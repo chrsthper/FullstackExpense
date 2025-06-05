@@ -1,0 +1,82 @@
+name: CI - Lint and Test
+
+on:
+  push:
+    branches: [ main, dev, staging ]
+  pull_request:
+    branches: [ main, dev, staging ]
+
+jobs:
+  lint:
+    name: ESLint Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+
+  test:
+    name: Jest Testing
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Unit Tests
+        run: npm run test
+        
+  sonarcloud:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests with Coverage
+        run: npm run test -- --coverage
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: sonarcloud
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Docker Build Image
+        run: docker build -t expense-app:1.0 .
