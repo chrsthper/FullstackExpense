@@ -35,6 +35,6 @@ export default defineConfig(
     }
   ],
   {
-    ignores: ["__tests__/"]  // ✅ penempatan yang benar
+    ignores: ["__tests__/"]  
   }
 );
