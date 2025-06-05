@@ -43,6 +43,7 @@ jobs:
 
       - name: Run Unit Tests
         run: npm run test
+        
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
