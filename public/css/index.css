@@ -6,7 +6,15 @@ body {
     margin: 0;
     padding: 20px 15px;
 }
-.separator {width: flex; height: 2px; background-color: #d6d6d6; border: none; margin: 1px auto;border-radius: 3px;}
+.separator {
+  width: 100%; /* atau 'auto', 'fit-content', dll tergantung tujuan */
+  height: 2px;
+  background-color: #d6d6d6;
+  border: none;
+  margin: 1px auto;
+  border-radius: 3px;
+}
+
 /* Header */
 h2, h5 {
     font-weight: 600;
