@@ -1,191 +1,269 @@
+/* RESET & BASE */
 body {
-    background-color: #0d1117;
-    color: #e6edf3;
+    background-color: #ffffff;
+    color: #ffffff;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 30px 15px;
+    padding: 20px 15px;
 }
-
-.tracker-container {
-    background-color: #161b22;
-    padding: 30px;
-    border-radius: 10px;
-    max-width: 700px;
-    margin: auto;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 25px;
+.separator {width: flex; height: 2px; background-color: #d6d6d6; border: none; margin: 1px auto;border-radius: 3px;}
+/* Header */
+h2, h5 {
     font-weight: 600;
-    color: #58a6ff;
+    color: #c0c0c0;
+    margin-bottom: 0;
+}
+p {
+    color: #c0c0c0;
+    padding-top: 0%;
 }
 
-label {
-    font-size: 14px;
-    color: #c9d1d9;
+/* CONTAINER UTAMA */
+.tracker-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    border-color: #adb5bd;
+    max-width: 720px;
+    margin: auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
 }
 
-input,
-select {
-    background-color: #0d1117;
-    border: 1px solid #30363d;
-    color: #e6edf3;
+/* BALANCE */
+#balance {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 5px;
+    padding: 15px 0;
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
 }
 
-input::placeholder,
-select {
-    color: #8b949e;
+/* POSITIVE / NEGATIVE */
+#balance.positive {
+    color: #198754;
+}
+#balance.negative {
+    color: #dc3545;
+}
+
+/* ICON INCOME / EXPENSE */
+.text-info i {
+    vertical-align: middle;
+    margin-right: 6px;
+    color: #157347;
+}
+.text-danger i {
+    vertical-align: middle;
+    margin-right: 6px;
+    color: #dc3545;
+}
+#total-income {
+    color: #157347;
+}
+
+/* FORM */
+input, select, textarea {
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    color: #212529;
+}
+input::placeholder, textarea::placeholder {
+    color: #adb5bd;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    box-shadow: none;
 }
 
 .btn-custom {
-    background-color: #238636;
+    background-color: #198754;
     color: #ffffff;
     font-weight: 500;
     margin-top: 15px;
 }
-
 .btn-custom:hover {
-    background-color: #2ea043;
+    background-color: #157347;
 }
 
-/* Gaya untuk tampilan saldo */
-#balance {
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px;
-    padding: 10px 0;
-    border-radius: 5px;
-    background-color: #1a1e26;
-    border: 1px solid #30363d;
-}
-
-/* Kelas untuk warna saldo positif */
-#balance.positive {
-    color: #2ea043; /* Hijau */
-}
-
-/* Kelas untuk warna saldo negatif */
-#balance.negative {
-    color: #da3633; /* Merah */
-}
-
-
-.section-title {
-    margin-top: 30px;
-    margin-bottom: 10px;
-    font-weight: 600;
-    color: #c9d1d9;
-}
-
-strong {
-    color: #58a6ff;
-}
-
-/* Gaya untuk setiap item list (kartu pengeluaran/pemasukan) */
+/* TRANSACTION LIST */
 .list-group-item {
-    background-color: #21262d;
-    color: #e6edf3;
-    border: 1px solid #30363d;
-    margin-bottom: 8px;
-    padding: 10px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease; /* Transisi untuk efek hover */
-    position: relative;
-    overflow: hidden;
-}
-
-/* Efek hover untuk item list */
-.list-group-item:hover {
-    background-color: #2a313b; /* Warna latar belakang sedikit lebih terang saat di-hover */
-}
-
-/* Gaya untuk baris ringkasan (Amount, Date, Category) */
-.entry-summary-top-row {
+    background-color: #fcfcfc;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+}
+.list-group-item:hover {
+    background-color: #f3f3f3;
+
+}
+.list-group-item .amount {
+    font-weight: 400;
 }
 
-.entry-summary-top-row .amount {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #58a6ff;
+.list-group-item.income .amount strong{
+    color: #198754;
+}
+.list-group-item.expense .amount  strong{
+    color: #dc3545;
 }
 
-.entry-summary-top-row .date {
-    font-size: 0.9em;
-    color: #c9d1d9;
+.list-group-item .category {
+    font-size: 14px;
+    color: #ffffff;
 }
 
-.entry-summary-top-row .category {
-    font-size: 0.9em;
-    color: #8b949e;
-    background-color: #30363d;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-left: 10px; /* Jarak dari tanggal */
-}
-
-/* Gaya untuk detail yang tersembunyi */
-.entry-details {
-    display: none; /* Sembunyikan secara default */
-    font-size: 0.85em;
-    color: #c9d1d9;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid #30363d;
-}
-
-/* Gaya untuk detail yang ditampilkan */
-.list-group-item.expanded .entry-details {
-    display: block; /* Tampilkan ketika item memiliki kelas 'expanded' */
-}
-
-/* Gaya untuk tombol edit/delete - awal tersembunyi sepenuhnya */
+/* ACTION BUTTONS */
 .entry-action-buttons {
-    position: absolute; /* Posisi absolut untuk hover */
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0; /* Awalnya tidak terlihat */
-    pointer-events: none; /* Penting: tidak bisa diklik saat tidak terlihat */
-    transition: opacity 0.3s ease;
     display: flex;
-    z-index: 2; /* Pastikan tombol di atas konten jika ada */
+    gap: 8px;
 }
 
-/* Tampilkan tombol saat item memiliki kelas 'expanded' */
-.list-group-item.expanded .entry-action-buttons {
-    position: static; /* Kembali ke posisi normal agar berada di bawah detail */
-    transform: none; /* Hapus transform */
-    opacity: 1; /* Tampilkan saat expanded */
-    pointer-events: auto; /* Aktifkan klik saat terlihat */
-    margin-top: 10px; /* Jarak dari detail */
-    justify-content: flex-end; /* Rata kanan saat statis */
-    width: 100%; /* Ambil lebar penuh */
+.entry-action-buttons .btn {
+    border-radius: 5px;
+    font-size: 0.875rem;
 }
 
-/* Perbaikan warna untuk tombol default Bootstrap agar sesuai tema */
-.btn-sm.btn-danger, .btn.btn-danger {
-    background-color: #da3633;
-    border-color: #da3633;
-    color: #fff;
+/* FILTER INPUTS */
+.filter-group input[type="date"], 
+.filter-group select {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    background-color: #fff;
 }
-.btn-sm.btn-danger:hover, .btn.btn-danger:hover {
-    background-color: #b02a27;
-    border-color: #b02a27;
+
+/* TRANSACTION CARD ICON */
+.transaction-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-weight: bold;
 }
-.btn-sm.btn-warning, .btn.btn-warning {
-    background-color: #f08800;
-    border-color: #f08800;
-    color: #fff;
+
+.transaction-icon.income {
+    background-color: #d1e7dd;
+    color: #198754;
 }
-.btn-sm.btn-warning:hover, .btn.btn-warning:hover {
-    background-color: #c26e00;
-    border-color: #c26e00;
+.transaction-icon.expense {
+    background-color: #f8d7da;
+    color: #dc3545;
 }
+
+#logoutBtn {
+    background-color: #ffffff; color: #c0c0c0; border-radius: 6px;
+}
+#logoutBtn:hover {
+    background-color: #f8f8f8; color: #313131; border-radius: 6px;
+}
+
+.date-header {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 10px;
+}
+
+.btn-edit-icon i:hover {
+    color: #ffc107;
+}
+
+.btn-delete-icon i:hover {
+    color: #dc3545;
+}
+
+.transaction-box {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.transaction-box:hover {
+  background-color: #f0f0f0;
+}
+
+.transaction-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.transaction-icon.income {
+  background-color: #d1e7dd;
+  color: #198754;
+}
+.transaction-icon.expense {
+  background-color: #f8d7da;
+  color: #dc3545;
+}
+.text-amount {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.transaction-details {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: #555;
+}
+.btn-edit-icon i:hover {
+  color: #ffc107;
+}
+.btn-delete-icon i:hover {
+  color: #dc3545;
+}
+.text-amount {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #000; /* atau #212529 untuk abu-abu tua */
+}
+
+/* Tombol default */
+.btn-edit-icon, .btn-delete-icon {
+  border: none;
+  background-color: transparent;
+  padding: 6px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover efek kotak dan warna ikon */
+.btn-edit-icon:hover {
+  background-color: #fff3cd; /* kuning muda */
+}
+.btn-edit-icon:hover i {
+  color: #ffc107; /* kuning tua */
+}
+
+.btn-delete-icon:hover {
+  background-color: #f8d7da; /* merah muda */
+}
+.btn-delete-icon:hover i {
+  color: #dc3545; /* merah tua */
+}
+
+/* Pastikan ikon selalu tampak */
+.btn-edit-icon i, .btn-delete-icon i {
+  color: #343a40; /* abu gelap default */
+  font-size: 1.1rem;
+}
+

@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Redirect root to login page
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/login.html"));
+  res.sendFile(path.join(__dirname, "public/landing.html"));
 });
 
 app.listen(PORT, () => {

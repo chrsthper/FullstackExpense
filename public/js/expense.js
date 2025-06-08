@@ -1,67 +1,26 @@
-// public/js/expense.js
-
-// 🔌 Import konfigurasi Firebase Auth & Firestore
 import { auth, db } from "./firebase-config.js";
 
-// 🔄 Import fungsi Firestore yang digunakan
 import {
-  collection, addDoc, getDocs, deleteDoc, doc, query, where
+  collection, addDoc, getDocs, deleteDoc, doc, query, where, getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// 🔐 Import fungsi autentikasi Firebase
 import {
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// 🧮 Import fungsi helper untuk format mata uang Rupiah
 import { formatRupiah } from "./utils.js";
 
-// 🔁 Ketika halaman selesai dimuat
 document.addEventListener("DOMContentLoaded", () => {
   const amountInput = document.getElementById("amount");
   const typeSelect = document.getElementById("type");
   const categorySelect = document.getElementById("category");
+  const filterSelect = document.getElementById("filter-type");
 
-  // 📂 Kategori untuk income dan expense
-  const incomeCategories = ["Salary",
-  "Freelance",
-  "Bonus",
-  "Gift",
-  "Investment",
-  "Business",
-  "Rental Income",
-  "Dividends",
-  "Cashback",
-  "Other"];
-  
-  const expenseCategories = ["Food & Drinks",
-  "Groceries",
-  "Transport",
-  "Fuel",
-  "Parking",
-  "Bills & Utilities",
-  "Electricity",
-  "Internet",
-  "Mobile Plan",
-  "Shopping",
-  "Entertainment",
-  "Health & Medical",
-  "Insurance",
-  "Education",
-  "Subscriptions",
-  "Travel",
-  "Dining Out",
-  "Donations",
-  "Gifts",
-  "Personal Care",
-  "Household",
-  "Pets",
-  "Loan Payments",
-  "Taxes",
-  "Other"];
+  const incomeCategories = ["Salary", "Freelance", "Bonus", "Gift", "Investment", "Business", "Rental Income", "Dividends", "Cashback", "Other"];
 
-  // 🔄 Update isi dropdown kategori sesuai tipe transaksi
+  const expenseCategories = ["Food & Drinks", "Groceries", "Transport", "Fuel", "Parking", "Bills & Utilities", "Electricity", "Internet", "Mobile Plan", "Shopping", "Entertainment", "Health & Medical", "Insurance", "Education", "Subscriptions", "Travel", "Dining Out", "Donations", "Gifts", "Personal Care", "Household", "Pets", "Loan Payments", "Taxes", "Other"];
+
   function updateCategoryOptions(type) {
     const categories = type === "income" ? incomeCategories : expenseCategories;
     categorySelect.innerHTML = "";
@@ -73,10 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔁 Jika tipe berubah, update kategori
   typeSelect.addEventListener("change", () => updateCategoryOptions(typeSelect.value));
+  filterSelect.addEventListener("change", () => fetchEntries(currentUserId));
 
-  // 💸 Saat user mengetik nominal, ubah jadi format Rupiah
   amountInput.addEventListener("input", (e) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
     amountInput.value = value ? formatRupiah(value) : "";
@@ -84,21 +42,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateCategoryOptions(typeSelect.value);
 
-  // 👤 Cek apakah user sudah login
-  onAuthStateChanged(auth, (user) => {
+  let currentUserId = null;
+
+  onAuthStateChanged(auth, async (user) => {
     if (!user) {
       alert("Please login first.");
       window.location.href = "login.html";
       return;
     }
 
-    const userId = user.uid;
-    fetchEntries(userId);
+    currentUserId = user.uid;
+    document.getElementById("user-email").textContent = user.email || "User";
+    const userDocRef = doc(db, "users", currentUserId);
+    const userDocSnap = await getDoc(userDocRef);
+    if (userDocSnap.exists() && userDocSnap.data().name) {
+      document.getElementById("user-name").textContent = userDocSnap.data().name;
+    }
 
-    // 📝 Submit form transaksi
+    fetchEntries(currentUserId);
+
     document.getElementById("expenseForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const amount = parseInt(amountInput.value.replace(/[^0-9]/g, ""));
       const description = document.getElementById("desc").value.trim();
       const category = categorySelect.value;
@@ -106,34 +70,24 @@ document.addEventListener("DOMContentLoaded", () => {
       const time = document.getElementById("time").value;
       const type = typeSelect.value;
 
-      // ✅ Validasi form sederhana
       if (!amount || isNaN(amount) || amount <= 0) return alert("Enter valid amount");
       if (description.length < 3) return alert("Description too short");
 
       try {
-        // 🚀 Simpan transaksi ke Firestore
         await addDoc(collection(db, "entries"), {
-          userId,
-          amount,
-          description,
-          category,
-          date,
-          time,
-          type,
+          userId: currentUserId, amount, description, category, date, time, type,
           createdAt: new Date()
         });
 
-        // 🔄 Reset form dan refresh tampilan transaksi
         e.target.reset();
         updateCategoryOptions(typeSelect.value);
-        fetchEntries(userId);
+        fetchEntries(currentUserId);
       } catch (err) {
         console.error("Add failed", err);
         alert("Failed to add entry.");
       }
     });
 
-    // 🚪 Tombol Logout
     document.getElementById("logoutBtn")?.addEventListener("click", async () => {
       try {
         await signOut(auth);
@@ -147,81 +101,97 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// 📥 Ambil dan render data transaksi dari Firestore
 async function fetchEntries(userId) {
   const q = query(collection(db, "entries"), where("userId", "==", userId));
   const snapshot = await getDocs(q);
+  const container = document.getElementById("transaction-list");
+  container.innerHTML = "";
 
-  const incomeList = document.getElementById("income-entries");
-  const expenseList = document.getElementById("expense-entries");
-  const balanceText = document.getElementById("balance");
+  let totalIncome = 0;
+  let totalExpense = 0;
 
-  incomeList.innerHTML = "";
-  expenseList.innerHTML = "";
-
-  let totalIncome = 0, totalExpense = 0;
+  const filterType = document.getElementById("filter-type").value;
+  const grouped = {};
 
   snapshot.forEach((docSnap) => {
     const item = { id: docSnap.id, ...docSnap.data() };
-    const list = item.type === "income" ? incomeList : expenseList;
+    if (filterType !== "all" && item.type !== filterType) return;
+    if (!grouped[item.date]) grouped[item.date] = [];
+    grouped[item.date].push(item);
 
     if (item.type === "income") totalIncome += item.amount;
-    else totalExpense += item.amount;
-
-    renderEntry(item, item.type, list, userId);
+    else if (item.type === "expense") totalExpense += item.amount;
   });
 
-  // 💰 Tampilkan balance akhir
   const balance = totalIncome - totalExpense;
-  balanceText.textContent = `Balance: ${formatRupiah(balance)}`;
+  const balanceText = document.getElementById("balance");
+  const totalIncomeText = document.getElementById("total-income");
+  const totalExpenseText = document.getElementById("total-expense");
+
+  if (balanceText) balanceText.textContent = formatRupiah(balance);
+  if (totalIncomeText) totalIncomeText.textContent = formatRupiah(totalIncome);
+  if (totalExpenseText) totalExpenseText.textContent = formatRupiah(totalExpense);
   balanceText.classList.toggle("positive", balance >= 0);
   balanceText.classList.toggle("negative", balance < 0);
-}
 
-// 🧾 Render satu transaksi (entry)
-function renderEntry(item, type, list, userId) {
-  const li = document.createElement("li");
-  li.className = "list-group-item";
+  for (const date in grouped) {
+    const dateHeader = document.createElement("div");
+    dateHeader.className = "date-header my-2 border-bottom pb-1 text-muted small";
+    dateHeader.textContent = date;
+    container.appendChild(dateHeader);
 
-  const summary = document.createElement("div");
-  summary.innerHTML = `
-    <strong>${formatRupiah(item.amount)}</strong> - ${item.category || "-"} (${item.date || "-"})<br/>
-    ${item.description || "-"}
-  `;
+    grouped[date].forEach(item => {
+      const wrapper = document.createElement("div");
+      wrapper.className = `transaction-box ${item.type}`;
 
-  const btnGroup = document.createElement("div");
-  btnGroup.className = "mt-2 d-flex justify-content-end gap-2";
+      const icon = item.type === "income"
+        ? '<i class="bi bi-caret-down-fill text-success"></i>'
+        : '<i class="bi bi-caret-up-fill text-danger"></i>';
 
-  // ❌ Tombol Delete
-  const deleteBtn = document.createElement("button");
-  deleteBtn.className = "btn btn-danger btn-sm";
-  deleteBtn.textContent = "Delete";
-  deleteBtn.onclick = async () => {
-    await deleteDoc(doc(db, "entries", item.id));
-    li.remove();
-    fetchEntries(userId);
-  };
+      wrapper.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex">
+            <div class="me-2">${icon}</div>
+            <div>
+              <strong class="text-amount">${formatRupiah(item.amount)}</strong>
+              <div class="transaction-details d-none">
+                <div><strong>Type:</strong> ${item.type}</div>
+                <div><strong>Category:</strong> ${item.category}</div>
+                <div><strong>Description:</strong> ${item.description}</div>
+                <div><strong>Time:</strong> ${item.time}</div>
+              </div>
+            </div>
+          </div>
+          <div class="entry-action-buttons">
+            <button class="btn btn-edit-icon"><i class="bi bi-pencil-square"></i></button>
+            <button class="btn btn-delete-icon"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>`;
 
-  // ✏️ Tombol Edit (langsung isi form)
-  const editBtn = document.createElement("button");
-  editBtn.className = "btn btn-warning btn-sm";
-  editBtn.textContent = "Edit";
-  editBtn.onclick = async () => {
-    document.getElementById("type").value = item.type;
-    document.getElementById("amount").value = formatRupiah(item.amount);
-    document.getElementById("desc").value = item.description;
-    document.getElementById("category").value = item.category;
-    document.getElementById("date").value = item.date;
-    document.getElementById("time").value = item.time;
+      const detailSection = wrapper.querySelector(".transaction-details");
+      wrapper.addEventListener("click", (e) => {
+        if (!e.target.closest(".entry-action-buttons")) {
+          detailSection.classList.toggle("d-none");
+        }
+      });
 
-    await deleteDoc(doc(db, "entries", item.id));
-    fetchEntries(userId);
-  };
+      wrapper.querySelector(".btn-delete-icon").onclick = async () => {
+        await deleteDoc(doc(db, "entries", item.id));
+        fetchEntries(userId);
+      };
 
-  btnGroup.appendChild(editBtn);
-  btnGroup.appendChild(deleteBtn);
+      wrapper.querySelector(".btn-edit-icon").onclick = async () => {
+        document.getElementById("type").value = item.type;
+        document.getElementById("amount").value = formatRupiah(item.amount);
+        document.getElementById("desc").value = item.description;
+        document.getElementById("category").value = item.category;
+        document.getElementById("date").value = item.date;
+        document.getElementById("time").value = item.time;
+        await deleteDoc(doc(db, "entries", item.id));
+        fetchEntries(userId);
+      };
 
-  li.appendChild(summary);
-  li.appendChild(btnGroup);
-  list.appendChild(li);
+      container.appendChild(wrapper);
+    });
+  }
 }
