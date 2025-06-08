@@ -1,21 +1,67 @@
 // public/js/expense.js
+
+// 🔌 Import konfigurasi Firebase Auth & Firestore
 import { auth, db } from "./firebase-config.js";
+
+// 🔄 Import fungsi Firestore yang digunakan
 import {
   collection, addDoc, getDocs, deleteDoc, doc, query, where
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// 🔐 Import fungsi autentikasi Firebase
 import {
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+// 🧮 Import fungsi helper untuk format mata uang Rupiah
+import { formatRupiah } from "./utils.js";
+
+// 🔁 Ketika halaman selesai dimuat
 document.addEventListener("DOMContentLoaded", () => {
   const amountInput = document.getElementById("amount");
   const typeSelect = document.getElementById("type");
   const categorySelect = document.getElementById("category");
 
-  const incomeCategories = ["Salary", "Gift", "Bonus", "Other"];
-  const expenseCategories = ["Food", "Transport", "Groceries", "Bills", "Entertainment", "Other"];
+  // 📂 Kategori untuk income dan expense
+  const incomeCategories = ["Salary",
+  "Freelance",
+  "Bonus",
+  "Gift",
+  "Investment",
+  "Business",
+  "Rental Income",
+  "Dividends",
+  "Cashback",
+  "Other"];
+  
+  const expenseCategories = ["Food & Drinks",
+  "Groceries",
+  "Transport",
+  "Fuel",
+  "Parking",
+  "Bills & Utilities",
+  "Electricity",
+  "Internet",
+  "Mobile Plan",
+  "Shopping",
+  "Entertainment",
+  "Health & Medical",
+  "Insurance",
+  "Education",
+  "Subscriptions",
+  "Travel",
+  "Dining Out",
+  "Donations",
+  "Gifts",
+  "Personal Care",
+  "Household",
+  "Pets",
+  "Loan Payments",
+  "Taxes",
+  "Other"];
 
+  // 🔄 Update isi dropdown kategori sesuai tipe transaksi
   function updateCategoryOptions(type) {
     const categories = type === "income" ? incomeCategories : expenseCategories;
     categorySelect.innerHTML = "";
@@ -27,7 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // 🔁 Jika tipe berubah, update kategori
   typeSelect.addEventListener("change", () => updateCategoryOptions(typeSelect.value));
+
+  // 💸 Saat user mengetik nominal, ubah jadi format Rupiah
   amountInput.addEventListener("input", (e) => {
     const value = e.target.value.replace(/[^0-9]/g, "");
     amountInput.value = value ? formatRupiah(value) : "";
@@ -35,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateCategoryOptions(typeSelect.value);
 
+  // 👤 Cek apakah user sudah login
   onAuthStateChanged(auth, (user) => {
     if (!user) {
       alert("Please login first.");
@@ -45,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const userId = user.uid;
     fetchEntries(userId);
 
+    // 📝 Submit form transaksi
     document.getElementById("expenseForm").addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -55,10 +106,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const time = document.getElementById("time").value;
       const type = typeSelect.value;
 
+      // ✅ Validasi form sederhana
       if (!amount || isNaN(amount) || amount <= 0) return alert("Enter valid amount");
       if (description.length < 3) return alert("Description too short");
 
       try {
+        // 🚀 Simpan transaksi ke Firestore
         await addDoc(collection(db, "entries"), {
           userId,
           amount,
@@ -69,6 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
           type,
           createdAt: new Date()
         });
+
+        // 🔄 Reset form dan refresh tampilan transaksi
         e.target.reset();
         updateCategoryOptions(typeSelect.value);
         fetchEntries(userId);
@@ -78,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // ✅ LOGOUT
+    // 🚪 Tombol Logout
     document.getElementById("logoutBtn")?.addEventListener("click", async () => {
       try {
         await signOut(auth);
@@ -92,12 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function formatRupiah(number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency", currency: "IDR", minimumFractionDigits: 0
-  }).format(number);
-}
-
+// 📥 Ambil dan render data transaksi dari Firestore
 async function fetchEntries(userId) {
   const q = query(collection(db, "entries"), where("userId", "==", userId));
   const snapshot = await getDocs(q);
@@ -114,17 +164,21 @@ async function fetchEntries(userId) {
   snapshot.forEach((docSnap) => {
     const item = { id: docSnap.id, ...docSnap.data() };
     const list = item.type === "income" ? incomeList : expenseList;
+
     if (item.type === "income") totalIncome += item.amount;
     else totalExpense += item.amount;
+
     renderEntry(item, item.type, list, userId);
   });
 
+  // 💰 Tampilkan balance akhir
   const balance = totalIncome - totalExpense;
   balanceText.textContent = `Balance: ${formatRupiah(balance)}`;
   balanceText.classList.toggle("positive", balance >= 0);
   balanceText.classList.toggle("negative", balance < 0);
 }
 
+// 🧾 Render satu transaksi (entry)
 function renderEntry(item, type, list, userId) {
   const li = document.createElement("li");
   li.className = "list-group-item";
@@ -138,6 +192,7 @@ function renderEntry(item, type, list, userId) {
   const btnGroup = document.createElement("div");
   btnGroup.className = "mt-2 d-flex justify-content-end gap-2";
 
+  // ❌ Tombol Delete
   const deleteBtn = document.createElement("button");
   deleteBtn.className = "btn btn-danger btn-sm";
   deleteBtn.textContent = "Delete";
@@ -147,6 +202,7 @@ function renderEntry(item, type, list, userId) {
     fetchEntries(userId);
   };
 
+  // ✏️ Tombol Edit (langsung isi form)
   const editBtn = document.createElement("button");
   editBtn.className = "btn btn-warning btn-sm";
   editBtn.textContent = "Edit";
@@ -157,6 +213,7 @@ function renderEntry(item, type, list, userId) {
     document.getElementById("category").value = item.category;
     document.getElementById("date").value = item.date;
     document.getElementById("time").value = item.time;
+
     await deleteDoc(doc(db, "entries", item.id));
     fetchEntries(userId);
   };
