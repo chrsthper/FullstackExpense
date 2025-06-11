@@ -27,19 +27,22 @@ FullstackExpense is a web application designed to help users manage their person
 
 To get a local copy of the project up and running, follow these steps:
 
-1.  **Clone the repository**:
+1. **Clone the repository**:
     ```bash
-    git clone [https://github.com/yourusername/fullstackexpense.git](https://github.com/yourusername/fullstackexpense.git)
+    git clone https://github.com/yourusername/fullstackexpense.git
     ```
-2.  **Navigate to the project directory**:
+
+2. **Navigate to the project directory**:
     ```bash
     cd fullstackexpense
     ```
-3.  **Install dependencies**:
+
+3. **Install dependencies**:
     ```bash
     npm install
     ```
-4.  **Set up Firebase Environment Variables**:
+
+4. **Set up Firebase Environment Variables**:
     Create a `.env` file in the root directory and add your Firebase configuration details. You can find these in your Firebase project settings. An example structure would be:
     ```
     API_KEY="your-firebase-api-key"
@@ -52,13 +55,13 @@ To get a local copy of the project up and running, follow these steps:
     ```
     *Note: The `firebase-config.js` file already contains placeholder values, but it's recommended to use environment variables for sensitive information.*
 
-5.  **Start the application**:
+5. **Start the application**:
     ```bash
     npm start
     ```
     The server will start at `http://localhost:3000`. You will see a message like "🚀 Server running at http://localhost:3000" in your console.
 
-6.  **Open in your browser**:
+6. **Open in your browser**:
     Navigate to `http://localhost:3000` in your web browser.
 
 ## Usage
@@ -103,3 +106,68 @@ The project uses Jest for unit and integration testing.
 To run the tests, use the following command:
 ```bash
 npm test
+```
+
+## CI/CD
+
+This project implements a CI/CD pipeline using GitHub Actions to automate the testing, building, and deployment processes.
+
+### Continuous Integration (CI)
+
+The `ci.yml` workflow is triggered on `push` and `pull_request` events to the `main`, `dev`, and `staging` branches. It includes the following jobs:
+
+- **ESLint Linting**:
+  - Checks out the repository.
+  - Sets up Node.js (version 18).
+  - Installs project dependencies.
+  - Runs ESLint to ensure code quality and style consistency.
+
+- **Jest Testing**:
+  - Depends on the lint job.
+  - Checks out the repository.
+  - Sets up Node.js (version 18).
+  - Installs project dependencies, including `supertest` for API testing.
+  - Executes unit tests.
+
+- **SonarCloud Analysis**:
+  - Depends on the test job.
+  - Checks out the repository.
+  - Sets up Node.js (version 18).
+  - Installs dependencies, including `supertest`.
+  - Runs tests with code coverage generation.
+  - Performs a SonarQube scan using the `SONAR_TOKEN` secret.
+
+- **Docker Build and Push to GCR**:
+  - Depends on the sonarcloud job.
+  - Checks out the repository.
+  - Authenticates to Google Cloud using `GCP_CREDENTIALS` secret.
+  - Configures Docker to use Google Cloud Registry (GCR).
+  - Builds the Docker image tagged with `expense-app:latest`.
+  - Tags the Docker image with the commit SHA for a unique version and also with `latest`.
+  - Pushes both tagged images to GCR (`gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.APP_NAME }}`).
+
+### Continuous Deployment (CD)
+
+The `cd.yml` workflow is triggered upon successful completion of the CI workflow, specifically for `main` and `staging` branches. It includes the following steps:
+
+- **Authenticate to Google Cloud**:
+  - Uses `GCP_CREDENTIALS` for authentication.
+
+- **Set up Google Cloud SDK**:
+  - Installs and configures the Google Cloud SDK.
+
+- **Deploy to Cloud Run**:
+  - Deploys the Docker image from GCR (`gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.APP_NAME }}:latest`) to Google Cloud Run.
+  - Configures the deployment with managed platform, specified `GCP_REGION`, and allow-unauthenticated access (can be adjusted for authentication).
+
+## SonarCloud Analysis
+
+SonarCloud is integrated into the CI pipeline to perform static code analysis and maintain code quality. The `sonar-project.properties` file defines the project key, organization, and source directories for analysis. It also specifies exclusions and configures the coverage report path.
+
+- **Project Key**: `chrsthper_FullstackExpense`
+- **Exclusions**: `node_modules/`, `public/`, `__tests__/**`
+- **Coverage Reports**: `coverage/lcov.info`
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
