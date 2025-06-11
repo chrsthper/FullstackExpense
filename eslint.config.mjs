@@ -35,6 +35,6 @@ export default defineConfig(
     }
   ],
   {
-    ignores: ["__tests__/"]  
+    ignores: ["__tests__/", "coverage/"] 
   }
 );
