@@ -1,42 +1,36 @@
+# cd.yml (Versi Awal / Sebelumnya)
 name: CD - Deploy to Google Cloud Run
 
 on:
-  workflow_run:
-    workflows: ["CI"] # Nama workflow CI Anda
-    types:
-      - completed
-    branches:
-      - main
-      - staging # Hanya deploy branch ini setelah CI selesai
-
-env:
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GCP_REGION: ${{ secrets.GCP_REGION }}
-  APP_NAME: expense-app # Harus sama dengan APP_NAME di ci.yml
+  push:
+    branches: [main, staging] # Dipicu oleh push, TIDAK menunggu CI
 
 jobs:
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
-    # Hanya jalankan job ini jika workflow CI yang memicunya berhasil (success)
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Authenticate to Google Cloud
-        # Menggunakan kredensial untuk autentikasi ke GCP
         uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
       - name: Set up Google Cloud SDK
-        # Memastikan gcloud CLI tersedia
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Deploy to Cloud Run
-        # Menggunakan image yang sudah didorong dari workflow CI
+      - name: Build and push Docker image
+        # CATATAN: Ini membangun ulang image, tidak menggunakan yang dari CI
         run: |
-          gcloud run deploy ${{ env.APP_NAME }} \
-            --image gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.APP_NAME }}:latest \
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/expense-app
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy expense-app \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/expense-app \
             --platform managed \
-            --region ${{ env.GCP_REGION }} \
-            --allow-unauthenticated # Sesuaikan jika Anda membutuhkan autentikasi
+            --region ${{ secrets.GCP_REGION }} \
+            --allow-unauthenticated
