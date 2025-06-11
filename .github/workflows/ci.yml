@@ -74,7 +74,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}' # Pastikan secret ini ada
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}' # Pastikan secret ini ada#
 
       - name: Configure Docker to use Google Cloud Registry
         run: gcloud auth configure-docker
