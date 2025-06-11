@@ -2,48 +2,45 @@ name: CD - Deploy to Google Cloud Run
 
 on:
   workflow_run:
-    workflows: ["CI"]  # Ganti dengan nama workflow CI Anda
+    workflows: ["CI"]  # Pastikan nama workflow CI sesuai dengan file CI Anda, misalnya "CI"
     types:
       - completed
 
 jobs:
-  deploy-production:
-    if: >
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'staging'
+  deploy:
+    name: Deploy to Cloud Run
     runs-on: ubuntu-latest
-    env:
-      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-      REGION: asia-southeast2
-      SERVICE: expense-app  # Sesuaikan dengan nama service Anda
-      REPOSITORY: expense-app-repo  # Sesuaikan dengan nama repository Anda
+
+    # Deploy hanya jika workflow CI berhasil
+    if: github.event.workflow_run.conclusion == 'success'
 
     steps:
-      - name: Checkout repo
+      # Step 1: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Authenticate to Google Cloud
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      - name: Setup Google Cloud SDK
+      # Step 3: Set up Google Cloud SDK
+      - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
-          project_id: ${{ env.PROJECT_ID }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Configure Docker for Artifact Registry
-        run: gcloud auth configure-docker asia-southeast2-docker.pkg.dev
-
-      - name: Build and Push Docker Image
+      # Step 4: Build and Push Docker Image
+      - name: Build and Push Docker image
         run: |
-          docker build -t asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest .
-          docker push asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest
+          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/expense-app .
 
+      # Step 5: Deploy the application to Cloud Run
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy ${{ env.SERVICE }} \
-            --image asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest \
-            --region ${{ env.REGION }} \
+          gcloud run deploy expense-app \
+            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/expense-app \
             --platform managed \
+            --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated
