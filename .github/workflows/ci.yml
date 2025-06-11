@@ -39,6 +39,8 @@ jobs:
           node-version: '18'
       - name: Install dependencies
         run: npm install
+      - name: Install Supertest
+        run: npm install --save-dev supertest
       - name: Run Unit Tests
         run: npm run test
 
