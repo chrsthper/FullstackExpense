@@ -1,6 +1,3 @@
-export default async () => ({
-  transform: {
-    "^.+\\.js$": "babel-jest"
-  },
+module.exports = {
   testEnvironment: "node"
-});
+};
