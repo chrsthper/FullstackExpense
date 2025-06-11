@@ -2,23 +2,20 @@ name: CD - Deploy to Google Cloud Run
 
 on:
   workflow_run:
-    workflows: ["CI"] # Pastikan nama ini persis dengan 'name' di ci.yml
+    workflows: ["CI"]
     types:
       - completed
-    branches:
-      - main
-      - staging # Hanya untuk branch yang ingin Anda deploy
 
 env:
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Pastikan secret ini ada
-  GCP_REGION: ${{ secrets.GCP_REGION }} # Pastikan secret ini ada
-  APP_NAME: expense-app # Harus sama dengan APP_NAME di ci.yml
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_REGION: ${{ secrets.GCP_REGION }}
+  APP_NAME: expense-app
 
 jobs:
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Hanya jalankan jika CI berhasil
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
 
     steps:
       - name: Authenticate to Google Cloud
@@ -30,10 +27,9 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
 
       - name: Deploy to Cloud Run
-        # Menggunakan image yang sudah didorong ke GCR oleh workflow CI
         run: |
           gcloud run deploy ${{ env.APP_NAME }} \
-            --image gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.APP_NAME }}:latest \ # Menggunakan tag 'latest'
+            --image gcr.io/${{ env.GCP_PROJECT_ID }}/${{ env.APP_NAME }}:latest \
             --platform managed \
             --region ${{ env.GCP_REGION }} \
-            --allow-unauthenticated # Sesuaikan jika perlu autentikasi
+            --allow-unauthenticated
