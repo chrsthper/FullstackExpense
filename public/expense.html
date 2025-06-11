@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker</title>
+  <link rel="icon" type="image/png" href="img/ICON-ET.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/index.css" />
+</head>
+<body class="bg text-white">
+  <div class="container py-2">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center gap-3 mb-4">
+      <div class="d-flex flex-column justify-content-center">
+        <h2 class="fw-bold" style="color: #007718;" id="user-name">User</h2>
+        <p id="user-email" class="mb-0"></p>
+      </div>
+      <div class="d-flex gap-2 align-items-center">
+        <button class="btn btn-outline-light" id="logoutBtn">
+          <i class="bi bi-box-arrow-right me-1"></i>Logout
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Left: Balance & Form -->
+      <div class="col-md-5 mb-4">
+        <!-- Balance -->
+        <div class="p-2 text-center mb-2" style="background-color: rgb(255, 255, 255);box-shadow: 0 0 15px rgba(110, 110, 110, 0.1);border-radius: 15px; border: 2px solid #ececec;">
+          <h5 class="mb-2" style="color: #c0c0c0;">
+            <i class="bi bi-cash me-2"></i>Balance
+          </h5>
+          <hr class="separator" />
+          <h1 class="fw-bold" id="balance">Rp 0</h1>
+          <hr class="separator" />
+          <div class="text-center mt-3">
+            <span class="text-info me-5">
+              <i class="bi bi-caret-down-fill me-1"></i><span id="total-income">0</span>
+            </span>
+            <span class="text-danger">
+              <i class="bi bi-caret-up-fill me-1"></i><span id="total-expense">0</span>
+            </span>
+          </div>
+        </div>
+        <!-- Tabs and Form -->
+        <div class="card text-dark" style="border-radius: 15px; border: 1px solid #d6d6d6;">
+          <div class="card-body" >
+            <h5 class="mb-2 text-center" style="color: #c0c0c0;">Transaction Form</h5>
+            <form id="expenseForm">
+              <select id="type" class="form-select mb-2" placeholder="Type" required>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+              <input type="text" id="amount" class="form-control mb-2" placeholder="Rp" required />
+              <select id="category" class="form-select mb-2" placeholder="Category" required></select>
+              <div class="d-flex gap-2 mb-2">
+                <input type="date" id="date" class="form-control" required />
+                <input type="time" id="time" class="form-control" required />
+              </div>
+              <textarea id="desc" class="form-control mb-2" placeholder="Description" rows="2" required></textarea>
+              <button type="submit" class="btn btn-success w-100">Add New Balance</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Transactions -->
+    <div class="col-md-7">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-semibold">Your Transaction</h5>
+        <select id="filter-type" class="form-select w-auto">
+          <option value="all">All</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </div>
+      <div id="transaction-list"></div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/expense.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
