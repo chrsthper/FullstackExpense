@@ -1,8 +1,8 @@
-name: CD - Deploy to Google Cloud Run
+name: 'CD'
 
 on:
   workflow_run:
-    workflows: ["CI"]  # Pastikan nama workflow CI sesuai dengan file CI Anda, misalnya "CI"
+    workflows: ['CI']  # Pastikan nama workflow CI sesuai dengan file CI Anda, misalnya "CI"
     types:
       - completed
 
