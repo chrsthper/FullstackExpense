@@ -1,34 +1,49 @@
 name: CD - Deploy to Google Cloud Run
 
 on:
-  push:
-    branches: [main, staging]
+  workflow_run:
+    workflows: ["CI"]  # Ganti dengan nama workflow CI Anda
+    types:
+      - completed
 
 jobs:
-  deploy:
-    name: Deploy to Cloud Run
+  deploy-production:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'staging'
     runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      REGION: asia-southeast2
+      SERVICE: expense-app  # Sesuaikan dengan nama service Anda
+      REPOSITORY: expense-app-repo  # Sesuaikan dengan nama repository Anda
 
     steps:
-      - name: Checkout code
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
-      - name: Set up Google Cloud SDK
+      - name: Setup Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ env.PROJECT_ID }}
 
-      - name: Build and push Docker image
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker asia-southeast2-docker.pkg.dev
+
+      - name: Build and Push Docker Image
         run: |
-          gcloud builds submit --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/expense-app
+          docker build -t asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest .
+          docker push asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy expense-app \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/expense-app \
+          gcloud run deploy ${{ env.SERVICE }} \
+            --image asia-southeast2-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:latest \
+            --region ${{ env.REGION }} \
             --platform managed \
-            --region ${{ secrets.GCP_REGION }} \
             --allow-unauthenticated
