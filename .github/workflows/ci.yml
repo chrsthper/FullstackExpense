@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, dev, staging, stage ]
+    branches: [ main, dev, staging, stage, deploy-preview ]
   pull_request:
-    branches: [ main, dev, staging, stage ]
+    branches: [ main, dev, staging, stage, deploy-preview ]
 
 env:
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} # Pastikan secret ini ada
@@ -39,8 +39,6 @@ jobs:
           node-version: '18'
       - name: Install dependencies
         run: npm install
-      - name: Install Supertest
-        run: npm install --save-dev supertest
       - name: Run Unit Tests
         run: npm run test
 
@@ -57,15 +55,15 @@ jobs:
           node-version: '18'
       - name: Install dependencies
         run: npm install
-      - name: Install Supertest
-        run: npm install --save-dev supertest
       - name: Run Tests with Coverage
         run: npm run test -- --coverage
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          # Tidak perlu SONAR_HOST_URL jika default SonarCloud.io sudah bekerja
+        with:
+          args: >
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov-report/index-lcov.xml
 
   docker-build-and-push: # Nama job diubah
     name: Docker Build and Push to GCR
