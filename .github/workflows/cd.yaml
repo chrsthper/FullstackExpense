@@ -1,4 +1,4 @@
-name: CD
+name: CD - Deploy to Google Cloud Run
 
 on:
   workflow_run:
