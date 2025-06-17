@@ -257,3 +257,4 @@ Fase CD diatur dalam *workflow* `cd.yml`. Ini terpicu secara otomatis hanya sete
         * Layanan dikonfigurasi sebagai `--platform managed` (layanan terkelola sepenuhnya oleh Google), di `--region` yang ditentukan oleh *secret* (`GCP_REGION`), dan dengan `--allow-unauthenticated` untuk akses publik.
 
 Dengan *pipeline* CI/CD ini, setiap perubahan yang berhasil diintegrasikan ke *branch* `main` akan secara otomatis melewati serangkaian pemeriksaan kualitas ketat dan kemudian disebarkan ke lingkungan produksi, memungkinkan pengiriman fitur baru yang cepat dan andal.
+hehehehehehehehehehehehehhehehehehhehehehehehehehehehehehe
