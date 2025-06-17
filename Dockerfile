@@ -17,7 +17,7 @@ COPY . .
 ENV NODE_ENV=production
 
 # Expose port 4000 (port yang digunakan oleh server.js)
-EXPOSE 4000
+EXPOSE 3000
 
 # Jalankan server.js (pastikan package.json sudah punya script "start": "node server.js")
 CMD ["npm", "start"]

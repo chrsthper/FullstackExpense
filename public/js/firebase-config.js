@@ -4,7 +4,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// Konfigurasi Firebase kamu
+// konfigurasi firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBs9YlKxRg8zsdedWip_OxnHIAUxYgCewE",
   authDomain: "expense-tracker-app-17f79.firebaseapp.com",
@@ -15,7 +15,7 @@ const firebaseConfig = {
   measurementId: "G-C56XWMTJJB"
 };
 
-// Inisialisasi Firebase
+// inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
