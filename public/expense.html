@@ -8,6 +8,19 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" href="../css/index.css" />
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+#categoryChart {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 300px;
+  max-height: 190px;
+  width: 100%;
+  height: auto;
+}
+</style>
 </head>
 <body class="bg text-white">
   <div class="container py-2">
@@ -66,17 +79,24 @@
         </div>
       </div>
 
-      <!-- Right: Transactions -->
-    <div class="col-md-7">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-semibold">Your Transaction</h5>
-        <select id="filter-type" class="form-select w-auto">
-          <option value="all">All</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
+      <!-- Right: Transactions and Filters -->
+      <div class="col-md-7">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-semibold">Your Transaction</h5>
+          <div class="d-flex gap-2">
+            <select id="filter-type" class="form-select w-auto">
+              <option value="all">All</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+            <select id="filter-category" class="form-select w-auto"></select>
+          </div>
+        </div>
+        <div class="mb-3">
+          <canvas id="categoryChart" height="120"></canvas>
+        </div>
+        <div id="transaction-list"></div>
       </div>
-      <div id="transaction-list"></div>
     </div>
   </div>
 
