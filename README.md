@@ -9,7 +9,7 @@ Nama Anggota dari Kelompok 3:
 
 ## Deskripsi
 
-![Landing Page Screenshot](docs/images/landing_page.png) FullstackExpense adalah aplikasi web yang dirancang untuk membantu pengguna mengelola keuangan pribadi mereka dengan melacak pendapatan dan pengeluaran secara efektif. Proyek ini mengadopsi pendekatan *full-stack*, mengombinasikan *backend* yang kuat yang dibangun dengan Node.js dan Express.js untuk melayani *frontend* yang interaktif yang dikembangkan menggunakan HTML, CSS, dan JavaScript murni.
+FullstackExpense adalah aplikasi web yang dirancang untuk membantu pengguna mengelola keuangan pribadi mereka dengan melacak pendapatan dan pengeluaran secara efektif. Proyek ini mengadopsi pendekatan *full-stack*, mengombinasikan *backend* yang kuat yang dibangun dengan Node.js dan Express.js untuk melayani *frontend* yang interaktif yang dikembangkan menggunakan HTML, CSS, dan JavaScript murni.
 
 Pusat dari aplikasi ini adalah integrasinya dengan Google Firebase, yang menyediakan layanan autentikasi pengguna yang aman dan kemampuan basis data NoSQL (Firestore) untuk menyimpan data transaksi secara *real-time*. Ini memastikan bahwa data keuangan pengguna selalu terbaru dan aman.
 
@@ -61,13 +61,13 @@ Proyek FullstackExpense memanfaatkan kombinasi *tools* dan *software* modern unt
 
 ### Google Spreadsheet
 
-![Google Spreadsheet Screenshot](docs/images/google_spreadsheet.jpg) Google Spreadsheet digunakan sebagai alat bantu kolaboratif yang fundamental dalam mengelola proyek DevOps secara efisien. Dengan fleksibilitas dan kemampuan kolaborasi *real-time*, Google Spreadsheet memfasilitasi pencatatan dan pemantauan tugas (*task*), linimasa (*timeline*), serta status pekerjaan secara transparan. Spreadsheet ini dirancang secara khusus untuk mendukung prinsip DevOps yang menekankan integrasi yang erat antara tim pengembangan (*development*) dan tim operasional (*operations*).
+Google Spreadsheet digunakan sebagai alat bantu kolaboratif yang fundamental dalam mengelola proyek DevOps secara efisien. Dengan fleksibilitas dan kemampuan kolaborasi *real-time*, Google Spreadsheet memfasilitasi pencatatan dan pemantauan tugas (*task*), linimasa (*timeline*), serta status pekerjaan secara transparan. Spreadsheet ini dirancang secara khusus untuk mendukung prinsip DevOps yang menekankan integrasi yang erat antara tim pengembangan (*development*) dan tim operasional (*operations*).
 
 Dalam penggunaannya, kami mengadopsi format tabular untuk menyusun tugas berdasarkan kategori status, seperti *backlog*, *in progress*, *testing*, dan *done*, yang sangat serupa dengan pendekatan Kanban. Setiap entri tugas di dalam *spreadsheet* ini mencakup informasi penting, termasuk deskripsi tugas, penanggung jawab, prioritas, tenggat waktu, dan status terkini. Melalui fitur-fitur bawaan Google Spreadsheet seperti filter, *conditional formatting*, dan kemampuan kolaborasi simultan, seluruh tim dapat menjaga visibilitas proyek yang tinggi dan meningkatkan akuntabilitas antar anggota tim. Ini memungkinkan pemangku kepentingan untuk melihat kemajuan proyek secara sekilas, mengidentifikasi hambatan, dan membuat keputusan yang tepat waktu.
 
 ### GitHub
 
-![GitHub Repository Screenshot](docs/images/github_repo.png) GitHub adalah platform *hosting* repositori Git berbasis *cloud* yang memainkan peran sentral dalam proyek FullstackExpense untuk manajemen kontrol versi, kolaborasi tim, dan integrasi dengan alur kerja DevOps. Penggunaan GitHub memastikan bahwa semua perubahan kode terlacak, terdokumentasi, dan dapat dikelola dengan efisien sepanjang siklus pengembangan.
+GitHub adalah platform *hosting* repositori Git berbasis *cloud* yang memainkan peran sentral dalam proyek FullstackExpense untuk manajemen kontrol versi, kolaborasi tim, dan integrasi dengan alur kerja DevOps. Penggunaan GitHub memastikan bahwa semua perubahan kode terlacak, terdokumentasi, dan dapat dikelola dengan efisien sepanjang siklus pengembangan.
 
 Berikut adalah aspek-aspek utama dari penggunaan GitHub dalam proyek ini:
 
@@ -106,9 +106,7 @@ Node.js dan Express.js membentuk inti dari *backend* aplikasi FullstackExpense, 
     * Proyek ini menggunakan `app.js` untuk mengonfigurasi Express.js, termasuk penyajian file statis dari direktori `public` dan mendefinisikan rute utama.
     * `server.js` berfungsi sebagai titik masuk untuk memulai server Node.js dan mendengarkan permintaan masuk.
 
-**Gambar X.X: Tampilan File `server.js` sebagai Titik Masuk Aplikasi Node.js**
-![server.js screenshot](docs/images/server_js.png) **Gambar X.X: Tampilan File `app.js` untuk Konfigurasi Express.js**
-![app.js screenshot](docs/images/app_js.png) ### Firebase
+### Firebase
 Firebase adalah platform *backend-as-a-service* yang digunakan untuk autentikasi dan basis data *real-time* (Cloud Firestore) di FullstackExpense.
 
 * **Membuat Proyek Firebase**:
@@ -120,10 +118,7 @@ Firebase adalah platform *backend-as-a-service* yang digunakan untuk autentikasi
 * **Mengaktifkan Layanan Autentikasi**: Di Firebase Console, aktifkan penyedia autentikasi yang Anda inginkan (misalnya, *Email/Password*) di bagian *Authentication*.
 * **Mengaktifkan Cloud Firestore**: Di Firebase Console, atur Cloud Firestore dan buat koleksi `users` dan `entries` untuk menyimpan data aplikasi.
 
-**Gambar X.X: Tampilan File `firebase-config.js` untuk Konfigurasi Firebase**
-![firebase-config.js screenshot](docs/images/firebase_config_js.png) **Gambar X.X: Contoh Penggunaan Firebase Authentication di `signup.js`**
-![signup.js auth screenshot](docs/images/signup_js_auth.png) **Gambar X.X: Contoh Penggunaan Cloud Firestore di `expense.js`**
-![expense.js firestore screenshot](docs/images/expense_js_firestore.png) ### GitHub Actions
+### GitHub Actions
 GitHub Actions digunakan untuk mengotomatisasi *pipeline* CI/CD, memastikan setiap perubahan kode diuji dan di-deploy secara otomatis.
 
 * **Membuat Folder *Workflows***: Di repositori GitHub Anda, buat folder `.github/workflows`.
@@ -142,9 +137,7 @@ GitHub Actions digunakan untuk mengotomatisasi *pipeline* CI/CD, memastikan seti
     * **Job**:
         * **Deploy to Cloud Run**: Menerapkan citra Docker terbaru dari GCR ke Google Cloud Run.
 
-**Gambar X.X: Tampilan File `ci.yml` (Continuous Integration Workflow)**
-![ci.yml screenshot](docs/images/ci_yml.png) **Gambar X.X: Tampilan File `cd.yml` (Continuous Deployment Workflow)**
-![cd.yml screenshot](docs/images/cd_yml.png) ### Docker
+### Docker
 Docker digunakan untuk mengemas aplikasi dan lingkungannya ke dalam kontainer, memastikan konsistensi dan portabilitas.
 
 * **Instalasi Docker Desktop**: Unduh dan instal Docker Desktop dari [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/).
@@ -152,8 +145,7 @@ Docker digunakan untuk mengemas aplikasi dan lingkungannya ke dalam kontainer, m
 * **Penggunaan Variabel Lingkungan**: Untuk mengelola variabel lingkungan (seperti kunci API Firebase), pastikan aplikasi Anda dapat membaca dari lingkungan saat runtime di dalam kontainer Docker. Dalam proyek ini, variabel lingkungan dikelola melalui GitHub Actions *secrets* dan kemudian diakses oleh aplikasi saat di-deploy ke Cloud Run.
 * **Integrasi dengan CI/CD**: Proses pembangunan dan pendorongan citra Docker sepenuhnya diotomatisasi dalam *workflow* CI GitHub Actions (`ci.yml`) setelah semua pemeriksaan kualitas kode dan pengujian berhasil.
 
-**Gambar X.X: Tampilan File `Dockerfile`**
-![Dockerfile screenshot](docs/images/Dockerfile.png) ### SonarCloud
+### SonarCloud
 SonarCloud diintegrasikan untuk analisis kualitas kode berkelanjutan dan pelaporan keamanan.
 
 * **Membuat Akun SonarCloud**: Kunjungi [https://sonarcloud.io/](https://sonarcloud.io/) dan *login* menggunakan akun GitHub Anda.
@@ -162,8 +154,7 @@ SonarCloud diintegrasikan untuk analisis kualitas kode berkelanjutan dan pelapor
 * **Mengonfigurasi `sonar-project.properties`**: Buat file `sonar-project.properties` di *root* repositori Anda. Konfigurasikan detail proyek Anda (projectKey, organization, sources, exclusions, dan reportPaths untuk cakupan kode LCOV).
 * **Integrasi ke GitHub Actions**: Pastikan *workflow* `ci.yml` Anda menyertakan langkah untuk menjalankan pemindaian SonarCloud setelah pengujian selesai, menggunakan `SonarSource/sonarqube-scan-action` dan `SONAR_TOKEN`.
 
-**Gambar X.X: Tampilan File `sonar-project.properties`**
-![sonar-project.properties screenshot](docs/images/sonar_project_properties.png) ### Google Cloud Platform (GCP)
+### Google Cloud Platform (GCP)
 GCP adalah *cloud provider* tempat aplikasi FullstackExpense di-deploy dan dijalankan.
 
 * **Membuat Akun dan Proyek di Google Cloud**:
@@ -185,13 +176,7 @@ GCP adalah *cloud provider* tempat aplikasi FullstackExpense di-deploy dan dijal
     * Setelah di-deploy ke Cloud Run, aplikasi Anda akan secara otomatis mengirim log ke Cloud Logging, dan metrik kinerja akan tersedia di Cloud Monitoring.
     * Anda dapat mengakses *dashboard* di GCP Console untuk memantau log aplikasi, metrik seperti latensi dan penggunaan CPU, serta mengatur *alert* untuk insiden.
 
-**Gambar X.X: Tampilan Google Cloud Console Dashboard**
-![GCP Dashboard screenshot](docs/images/gcp_dashboard.png) **Gambar X.X: Tampilan Google Cloud IAM & Admin (Service Accounts)**
-![GCP Service Accounts screenshot](docs/images/gcp_service_accounts.png) **Gambar X.X: Tampilan Google Artifact Registry**
-![GCP Artifact Registry screenshot](docs/images/gcp_artifact_registry.png) **Gambar X.X: Tampilan Google Cloud Run Services**
-![GCP Cloud Run Services screenshot](docs/images/gcp_cloud_run_services.png) **Gambar X.X: Tampilan Google Cloud Logging**
-![GCP Cloud Logging screenshot](docs/images/gcp_cloud_logging.png) **Gambar X.X: Tampilan Google Cloud Monitoring**
-![GCP Cloud Monitoring screenshot](docs/images/gcp_cloud_monitoring.png) ## Penjelasan Pipeline CI/CD
+## Penjelasan Pipeline CI/CD
 
 Proyek FullstackExpense mengimplementasikan *Continuous Integration/Continuous Deployment* (CI/CD) yang komprehensif melalui GitHub Actions, yang mengotomatiskan seluruh siklus dari *commit* kode hingga *deployment* aplikasi. *Pipeline* ini dirancang untuk memastikan kualitas, keamanan, dan pengiriman *software* yang efisien.
 
@@ -257,4 +242,3 @@ Fase CD diatur dalam *workflow* `cd.yml`. Ini terpicu secara otomatis hanya sete
         * Layanan dikonfigurasi sebagai `--platform managed` (layanan terkelola sepenuhnya oleh Google), di `--region` yang ditentukan oleh *secret* (`GCP_REGION`), dan dengan `--allow-unauthenticated` untuk akses publik.
 
 Dengan *pipeline* CI/CD ini, setiap perubahan yang berhasil diintegrasikan ke *branch* `main` akan secara otomatis melewati serangkaian pemeriksaan kualitas ketat dan kemudian disebarkan ke lingkungan produksi, memungkinkan pengiriman fitur baru yang cepat dan andal.
-hehehehehehehehehehehehehhehehehehhehehehehehehehehehehehe
